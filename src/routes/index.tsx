@@ -1,29 +1,56 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import { buildPageHead } from "@/lib/site";
+import Hero from "@/components/site/Hero";
+import Services from "@/components/site/Services";
+import WhyChooseUs from "@/components/site/WhyChooseUs";
+import ClientsBanner from "@/components/site/ClientsBanner";
+import Contact from "@/components/site/Contact";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
-    ],
-  }),
-  component: Index,
+  head: () =>
+    buildPageHead({
+      title: "Electrical & Instrumentation Project Solutions",
+      description:
+        "EPS Projects Pvt. Ltd. delivers integrated Electrical & Instrumentation solutions for industrial and clean-energy projects across India through design, supply, execution, and commissioning.",
+      path: "/",
+    }),
+  component: HomePage,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function HomePage() {
+  const navigate = useNavigate();
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div data-testid="home-page">
+      <Hero />
+      <Services />
+      <WhyChooseUs />
+      <ClientsBanner />
+
+      <section className="bg-blue-600 py-16" data-testid="home-cta">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+              Have a project in mind?
+            </h2>
+            <p className="text-blue-100 text-lg">
+              Let's discuss how EPS Projects can deliver it end-to-end.
+            </p>
+          </div>
+          <Button
+            size="lg"
+            onClick={() => navigate({ to: "/contact" })}
+            data-testid="home-cta-contact-btn"
+            className="bg-white text-blue-700 hover:bg-slate-100 px-8 py-6 text-lg group"
+          >
+            Request a Consultation
+            <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+          </Button>
+        </div>
+      </section>
+
+      <Contact />
     </div>
   );
 }
