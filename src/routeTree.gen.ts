@@ -24,6 +24,7 @@ import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminProjectsRouteImport } from './routes/_authenticated/admin/projects'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin/dashboard'
+import { Route as AuthenticatedAdminClientsRouteImport } from './routes/_authenticated/admin/clients'
 import { Route as AuthenticatedAdminSplatRouteImport } from './routes/_authenticated/admin/$'
 
 const WhyChooseUsRoute = WhyChooseUsRouteImport.update({
@@ -102,6 +103,12 @@ const AuthenticatedAdminDashboardRoute =
     path: '/dashboard',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminClientsRoute =
+  AuthenticatedAdminClientsRouteImport.update({
+    id: '/clients',
+    path: '/clients',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminSplatRoute = AuthenticatedAdminSplatRouteImport.update({
   id: '/$',
   path: '/$',
@@ -121,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/admin/$': typeof AuthenticatedAdminSplatRoute
+  '/admin/clients': typeof AuthenticatedAdminClientsRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -137,6 +145,7 @@ export interface FileRoutesByTo {
   '/why-choose-us': typeof WhyChooseUsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/$': typeof AuthenticatedAdminSplatRoute
+  '/admin/clients': typeof AuthenticatedAdminClientsRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -156,6 +165,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/_authenticated/admin/$': typeof AuthenticatedAdminSplatRoute
+  '/_authenticated/admin/clients': typeof AuthenticatedAdminClientsRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_authenticated/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/login'
     | '/admin/$'
+    | '/admin/clients'
     | '/admin/dashboard'
     | '/admin/projects'
     | '/admin/'
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
     | '/why-choose-us'
     | '/admin/login'
     | '/admin/$'
+    | '/admin/clients'
     | '/admin/dashboard'
     | '/admin/projects'
     | '/admin'
@@ -209,6 +221,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/admin/login'
     | '/_authenticated/admin/$'
+    | '/_authenticated/admin/clients'
     | '/_authenticated/admin/dashboard'
     | '/_authenticated/admin/projects'
     | '/_authenticated/admin/'
@@ -335,6 +348,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminDashboardRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/clients': {
+      id: '/_authenticated/admin/clients'
+      path: '/clients'
+      fullPath: '/admin/clients'
+      preLoaderRoute: typeof AuthenticatedAdminClientsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/$': {
       id: '/_authenticated/admin/$'
       path: '/$'
@@ -347,6 +367,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminSplatRoute: typeof AuthenticatedAdminSplatRoute
+  AuthenticatedAdminClientsRoute: typeof AuthenticatedAdminClientsRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
   AuthenticatedAdminProjectsRoute: typeof AuthenticatedAdminProjectsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -355,6 +376,7 @@ interface AuthenticatedAdminRouteRouteChildren {
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
     AuthenticatedAdminSplatRoute: AuthenticatedAdminSplatRoute,
+    AuthenticatedAdminClientsRoute: AuthenticatedAdminClientsRoute,
     AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
     AuthenticatedAdminProjectsRoute: AuthenticatedAdminProjectsRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
