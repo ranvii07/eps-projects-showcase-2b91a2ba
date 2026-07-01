@@ -1,7 +1,13 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Target, Eye, Shield } from "lucide-react";
+import { Target, Eye, Shield, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
-const About = () => {
+type HseRow = {
+  id: string;
+  title: string | null;
+  body: string | null;
+};
   return (
     <section id="about" className="py-20 bg-zinc-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
