@@ -8,6 +8,31 @@ type HseRow = {
   title: string | null;
   body: string | null;
 };
+const About = () => {
+  const [hseContent, setHseContent] = useState<HseRow[] | null>(null);
+  const [hseError, setHseError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase
+        .from("hse_content")
+        .select("id, title, body")
+        .eq("published", true)
+        .order("sort_order", { ascending: true });
+      if (cancelled) return;
+      if (error) {
+        setHseError(error.message);
+        setHseContent([]);
+      } else {
+        setHseContent(data ?? []);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <section id="about" className="py-20 bg-zinc-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
