@@ -1,7 +1,38 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Target, Eye, Shield } from "lucide-react";
+import { Target, Eye, Shield, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
+type HseRow = {
+  id: string;
+  title: string | null;
+  body: string | null;
+};
 const About = () => {
+  const [hseContent, setHseContent] = useState<HseRow[] | null>(null);
+  const [hseError, setHseError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase
+        .from("hse_content")
+        .select("id, title, body")
+        .eq("published", true)
+        .order("sort_order", { ascending: true });
+      if (cancelled) return;
+      if (error) {
+        setHseError(error.message);
+        setHseContent([]);
+      } else {
+        setHseContent(data ?? []);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <section id="about" className="py-20 bg-zinc-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -100,9 +131,28 @@ const About = () => {
                 </div>
               </div>
               <h3 className="text-xl font-bold text-white mb-4 text-center">Quality &amp; Safety</h3>
-              <p className="text-slate-300 text-center leading-relaxed">
-                We are committed to doing it right the first time and continuing to improve in meeting customer satisfaction and regulatory requirements in quality, environmental protection, workplace safety, and health.
-              </p>
+              {hseContent === null ? (
+                <div className="flex justify-center py-4">
+                  <Loader2 className="animate-spin text-orange-400" size={24} />
+                </div>
+              ) : hseError ? (
+                <p className="text-slate-300 text-center leading-relaxed">
+                  Unable to load quality &amp; safety content at the moment. Please try again later.
+                </p>
+              ) : hseContent.length === 0 ? (
+                <p className="text-slate-300 text-center leading-relaxed">No quality &amp; safety content available.</p>
+              ) : (
+                <div className="space-y-4">
+                  {hseContent.map((item) => (
+                    <div key={item.id}>
+                      {item.title && (
+                        <h4 className="text-white font-semibold mb-2 text-center">{item.title}</h4>
+                      )}
+                      <p className="text-slate-300 text-center leading-relaxed">{item.body}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
