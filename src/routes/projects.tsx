@@ -1,19 +1,23 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building2, ArrowRight } from "lucide-react";
+import { Building2, ArrowRight, Loader2 } from "lucide-react";
 import { buildPageHead } from "@/lib/site";
 import PageHeader from "@/components/site/PageHeader";
+import { supabase } from "@/integrations/supabase/client";
 
-type Project = {
+const BUCKET = "project-images";
+
+type ProjectRow = {
   id: string;
-  title: string;
-  category?: string;
-  description?: string;
-  image?: string;
+  name: string;
+  industry: string | null;
+  description: string | null;
+  image_url: string | null;
+  sort_order: number;
+  published: boolean;
 };
-
-const projects: Project[] = [];
 
 export const Route = createFileRoute("/projects")({
   head: () =>
@@ -26,8 +30,60 @@ export const Route = createFileRoute("/projects")({
   component: ProjectsPage,
 });
 
+function SignedProjectImage({ path, alt }: { path: string; alt: string }) {
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    let active = true;
+    setUrl(null);
+    supabase.storage
+      .from(BUCKET)
+      .createSignedUrl(path, 60 * 10)
+      .then(({ data }) => {
+        if (active) setUrl(data?.signedUrl ?? null);
+      });
+    return () => {
+      active = false;
+    };
+  }, [path]);
+  if (!url)
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-zinc-800">
+        <Loader2 className="h-5 w-5 animate-spin text-zinc-500" />
+      </div>
+    );
+  return (
+    <img
+      src={url}
+      alt={alt}
+      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+    />
+  );
+}
+
 function ProjectsPage() {
   const navigate = useNavigate();
+  const [projects, setProjects] = useState<ProjectRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const { data, error } = await supabase
+        .from("projects")
+        .select("id,name,industry,description,image_url,sort_order,published")
+        .eq("published", true)
+        .order("sort_order", { ascending: true });
+      if (!active) return;
+      if (error) setError(error.message);
+      else setProjects((data as ProjectRow[]) ?? []);
+      setLoading(false);
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <div data-testid="projects-page" className="bg-zinc-950 min-h-screen">
       <PageHeader
@@ -37,7 +93,15 @@ function ProjectsPage() {
 
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {projects.length === 0 ? (
+          {loading ? (
+            <div className="flex justify-center py-12" data-testid="projects-loading">
+              <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
+            </div>
+          ) : error ? (
+            <p className="text-center text-red-400" data-testid="projects-error">
+              Failed to load projects.
+            </p>
+          ) : projects.length === 0 ? (
             <div className="text-center max-w-2xl mx-auto" data-testid="projects-empty-state">
               <div className="w-20 h-20 bg-cyan-400/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Building2 className="text-cyan-400" size={40} />
@@ -69,23 +133,21 @@ function ProjectsPage() {
                   className="group overflow-hidden bg-zinc-900 border-zinc-800 hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-300 hover:-translate-y-2"
                   data-testid={`project-card-${project.id}`}
                 >
-                  {project.image && (
+                  {project.image_url && (
                     <div className="aspect-video overflow-hidden">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      />
+                      <SignedProjectImage path={project.image_url} alt={project.name} />
                     </div>
                   )}
                   <CardContent className="pt-6">
-                    {project.category && (
+                    {project.industry && (
                       <span className="text-cyan-400 text-sm font-medium uppercase tracking-wide">
-                        {project.category}
+                        {project.industry}
                       </span>
                     )}
-                    <h3 className="text-xl font-bold text-white mt-2 mb-3">{project.title}</h3>
-                    <p className="text-slate-300 leading-relaxed">{project.description}</p>
+                    <h3 className="text-xl font-bold text-white mt-2 mb-3">{project.name}</h3>
+                    {project.description && (
+                      <p className="text-slate-300 leading-relaxed">{project.description}</p>
+                    )}
                   </CardContent>
                 </Card>
               ))}
