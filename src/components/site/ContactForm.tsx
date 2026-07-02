@@ -3,7 +3,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const INITIAL_FORM = { name: "", email: "", phone: "", subject: "", message: "" };
 
@@ -25,17 +27,35 @@ const ContactForm = () => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+    const message = formData.message.trim();
+    if (!name || !email || !message) {
+      toast.error("Please fill in your name, email, and message.");
+      return;
+    }
 
-    setTimeout(() => {
-      toast.success("Message Sent!", {
-        description: "Thank you for contacting us. We will get back to you shortly.",
-      });
-      setFormData(INITIAL_FORM);
-      setIsSubmitting(false);
-    }, 1000);
+    setIsSubmitting(true);
+    const { error } = await supabase.from("contact_submissions").insert({
+      name,
+      email,
+      phone: formData.phone.trim() || null,
+      subject: formData.subject.trim() || null,
+      message,
+    });
+    setIsSubmitting(false);
+
+    if (error) {
+      toast.error("Unable to send message", { description: error.message });
+      return;
+    }
+
+    toast.success("Message Sent!", {
+      description: "Thank you for contacting us. We will get back to you shortly.",
+    });
+    setFormData(INITIAL_FORM);
   };
 
   return (
