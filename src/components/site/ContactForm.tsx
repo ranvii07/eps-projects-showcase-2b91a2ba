@@ -107,7 +107,9 @@ const ContactForm = () => {
               data-testid="contact-submit-btn"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-lg"
             >
-              {isSubmitting ? "Sending..." : "Send Message"}
+              {isSubmitting ? (
+                <span className="inline-flex items-center gap-2"><Loader2 className="h-5 w-5 animate-spin" /> Sending...</span>
+              ) : "Send Message"}
             </Button>
           </form>
         </CardContent>
