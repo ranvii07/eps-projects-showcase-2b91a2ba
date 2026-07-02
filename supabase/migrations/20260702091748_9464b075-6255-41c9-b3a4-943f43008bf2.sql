@@ -1,0 +1,1 @@
+CREATE POLICY "submissions staff delete" ON public.contact_submissions FOR DELETE USING (public.is_staff(auth.uid()));
