@@ -37,7 +37,7 @@ const navItems = [
   { title: "FAQs", url: "/admin/faq", icon: HelpCircle },
   { title: "HSE", url: "/admin/hse", icon: ShieldCheck },
   { title: "Credentials", url: "/admin/credentials", icon: Award },
-  { title: "Contact Submissions", url: "/admin/submissions", icon: Mail },
+  { title: "Contact Management", url: "/admin/contact-management", icon: Mail },
   { title: "Settings", url: "/admin/settings", icon: SettingsIcon },
 ] as const;
 

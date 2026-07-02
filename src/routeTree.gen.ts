@@ -28,6 +28,7 @@ import { Route as AuthenticatedAdminHseRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedAdminFaqRouteImport } from './routes/_authenticated/admin/faq'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin/dashboard'
 import { Route as AuthenticatedAdminCredentialsRouteImport } from './routes/_authenticated/admin/credentials'
+import { Route as AuthenticatedAdminContactManagementRouteImport } from './routes/_authenticated/admin/contact-management'
 import { Route as AuthenticatedAdminClientsRouteImport } from './routes/_authenticated/admin/clients'
 import { Route as AuthenticatedAdminSplatRouteImport } from './routes/_authenticated/admin/$'
 
@@ -129,6 +130,12 @@ const AuthenticatedAdminCredentialsRoute =
     path: '/credentials',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminContactManagementRoute =
+  AuthenticatedAdminContactManagementRouteImport.update({
+    id: '/contact-management',
+    path: '/contact-management',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminClientsRoute =
   AuthenticatedAdminClientsRouteImport.update({
     id: '/clients',
@@ -155,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/admin/$': typeof AuthenticatedAdminSplatRoute
   '/admin/clients': typeof AuthenticatedAdminClientsRoute
+  '/admin/contact-management': typeof AuthenticatedAdminContactManagementRoute
   '/admin/credentials': typeof AuthenticatedAdminCredentialsRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/faq': typeof AuthenticatedAdminFaqRoute
@@ -176,6 +184,7 @@ export interface FileRoutesByTo {
   '/admin/login': typeof AdminLoginRoute
   '/admin/$': typeof AuthenticatedAdminSplatRoute
   '/admin/clients': typeof AuthenticatedAdminClientsRoute
+  '/admin/contact-management': typeof AuthenticatedAdminContactManagementRoute
   '/admin/credentials': typeof AuthenticatedAdminCredentialsRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/faq': typeof AuthenticatedAdminFaqRoute
@@ -200,6 +209,7 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/_authenticated/admin/$': typeof AuthenticatedAdminSplatRoute
   '/_authenticated/admin/clients': typeof AuthenticatedAdminClientsRoute
+  '/_authenticated/admin/contact-management': typeof AuthenticatedAdminContactManagementRoute
   '/_authenticated/admin/credentials': typeof AuthenticatedAdminCredentialsRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_authenticated/admin/faq': typeof AuthenticatedAdminFaqRoute
@@ -224,6 +234,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/$'
     | '/admin/clients'
+    | '/admin/contact-management'
     | '/admin/credentials'
     | '/admin/dashboard'
     | '/admin/faq'
@@ -245,6 +256,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/$'
     | '/admin/clients'
+    | '/admin/contact-management'
     | '/admin/credentials'
     | '/admin/dashboard'
     | '/admin/faq'
@@ -268,6 +280,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/_authenticated/admin/$'
     | '/_authenticated/admin/clients'
+    | '/_authenticated/admin/contact-management'
     | '/_authenticated/admin/credentials'
     | '/_authenticated/admin/dashboard'
     | '/_authenticated/admin/faq'
@@ -426,6 +439,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCredentialsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/contact-management': {
+      id: '/_authenticated/admin/contact-management'
+      path: '/contact-management'
+      fullPath: '/admin/contact-management'
+      preLoaderRoute: typeof AuthenticatedAdminContactManagementRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/clients': {
       id: '/_authenticated/admin/clients'
       path: '/clients'
@@ -446,6 +466,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminSplatRoute: typeof AuthenticatedAdminSplatRoute
   AuthenticatedAdminClientsRoute: typeof AuthenticatedAdminClientsRoute
+  AuthenticatedAdminContactManagementRoute: typeof AuthenticatedAdminContactManagementRoute
   AuthenticatedAdminCredentialsRoute: typeof AuthenticatedAdminCredentialsRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
   AuthenticatedAdminFaqRoute: typeof AuthenticatedAdminFaqRoute
@@ -459,6 +480,8 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
   {
     AuthenticatedAdminSplatRoute: AuthenticatedAdminSplatRoute,
     AuthenticatedAdminClientsRoute: AuthenticatedAdminClientsRoute,
+    AuthenticatedAdminContactManagementRoute:
+      AuthenticatedAdminContactManagementRoute,
     AuthenticatedAdminCredentialsRoute: AuthenticatedAdminCredentialsRoute,
     AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
     AuthenticatedAdminFaqRoute: AuthenticatedAdminFaqRoute,
