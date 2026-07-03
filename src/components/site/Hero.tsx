@@ -24,13 +24,13 @@ const Hero = () => {
             Solutions
           </h1>
           <p className="text-lg md:text-xl text-slate-200 mb-8 leading-relaxed">
-            Integrated Electrical &amp; Instrumentation solutions for industrial and clean-energy projects across India, delivered through design, supply, execution, and commissioning.
+            Delivering integrated Electrical, Instrumentation & Automation solutions for industrial and clean-energy projects across India- from design and engineering to procurement, supply, execution, testing and commissioning.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
             {[
               "ISO Certified Quality Standards",
-              "20+ Years of Industry Experience",
+              "25+ Years of Industry Experience",
               "Clean Energy Focus",
               "Turnkey Project Solutions",
             ].map((feature) => (
