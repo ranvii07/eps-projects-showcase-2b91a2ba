@@ -27,7 +27,7 @@ const Footer = () => {
               />
             </Link>
             <p className="text-slate-400 leading-relaxed mb-4">
-              Leading provider of Electrical &amp; Instrumentation engineering solutions with over 20 years of industry experience.
+              Leading provider of Electrical &amp; Instrumentation engineering solutions with over 25 years of industry experience.
             </p>
           </div>
 
