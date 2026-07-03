@@ -12,10 +12,10 @@ const colorMap = {
   cyan: "bg-cyan-100 text-cyan-600 group-hover:bg-cyan-600",
 } as const;
 
-const reasons: Reason[] = [
+const reasons:Reason[] = [
   {
     icon: Award,
-    title: "Proven Industrial Experience",
+    title: "Industrial Project Expertise",
     description:
       "Our team has successfully executed projects across power, sugar, distillery, ethanol, steel, cement, infrastructure, oil & gas, and hydro power sectors, enabling us to understand the unique challenges of each industry.",
     color: "blue",
@@ -29,7 +29,7 @@ const reasons: Reason[] = [
   },
   {
     icon: Leaf,
-    title: "Pan-India Presence",
+    title: "Pan-India Project Execution",
     description:
       "With projects executed across multiple states and an international project in Nepal, EPS Projects has demonstrated its ability to successfully deliver solutions across diverse geographic and operational environments.",
     color: "emerald",
@@ -43,14 +43,14 @@ const reasons: Reason[] = [
   },
   {
     icon: Users,
-    title: "Customer-Centric Approach",
+    title: "Long Term",
     description:
       "We focus on building long-term relationships by understanding client requirements, delivering practical solutions, and providing dependable support even after project completion.",
     color: "cyan",
   },
   {
     icon: DollarSign,
-    title: "Innovation & Operational Excellence",
+    title: "Engineering Excelence & Innovation",
     description:
       "By leveraging modern engineering practices, efficient construction methodologies, and advanced automation technologies, we help clients achieve lower project costs, improved process control, higher efficiency, and better operational reliability.",
     color: "orange",
@@ -63,11 +63,11 @@ const WhyChooseUs = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Delivering Engineering Excellence Through Experience, Innovation, and Execution
+            Comprehensive Electrical & Instrumentation Solutions
           </h2>
           <div className="w-24 h-1 bg-cyan-400 mx-auto mb-6"></div>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            EPS Projects combines technical expertise, practical field experience, and strong project management capabilities to deliver reliable Electrical &amp; Instrumentation solutions for complex industrial environments.
+            EPS Projects provides end-to-end Electrical, Instrumentation, and Automation solutions designed to support industrial facilities throughout their project lifecycle. Our integrated project delivery approach provides clients with a single execution partner for engineering, procurement, execution, commissioning, and post-project support.
           </p>
         </div>
 
