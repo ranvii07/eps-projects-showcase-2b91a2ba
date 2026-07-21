@@ -12,7 +12,8 @@ export const Route = createFileRoute("/services")({
     }),
   component: () => (
     <div data-testid="services-page" className="pt-20">
-      <Services />
+      <h1 className="sr-only">Electrical &amp; Instrumentation Services</h1>
+      <Services variant="detail" />
     </div>
   ),
 });

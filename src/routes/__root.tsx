@@ -18,9 +18,41 @@ import Footer from "@/components/site/Footer";
 import ScrollToTop from "@/components/site/ScrollToTop";
 import { Toaster } from "@/components/ui/sonner";
 
+// Shared across the Organization + LocalBusiness schemas so both emit the same
+// T3.9-approved public contact roster (Delhi corporate office; two leadership
+// numbers; info@ + surender@). Address is the §7.10 canonical wording.
+const POSTAL_ADDRESS = {
+  "@type": "PostalAddress",
+  streetAddress: "212, 2nd Floor, Ansal Chamber-2, 6 Bhikaji Cama Place",
+  addressLocality: "New Delhi",
+  addressRegion: "Delhi",
+  postalCode: "110066",
+  addressCountry: "IN",
+} as const;
+
+const CONTACT_POINTS = [
+  {
+    "@type": "ContactPoint",
+    telephone: "+919810731116",
+    contactType: "sales",
+    email: "info@epsprojects.in",
+    areaServed: "IN",
+    availableLanguage: ["en", "hi"],
+  },
+  {
+    "@type": "ContactPoint",
+    telephone: "+919071970000",
+    contactType: "customer service",
+    email: "surender@epsprojects.in",
+    areaServed: "IN",
+    availableLanguage: ["en", "hi"],
+  },
+] as const;
+
 const ORG_JSON_LD = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": `${SITE_URL}/#organization`,
   name: SITE_NAME,
   alternateName: "EPS Projects",
   url: SITE_URL,
@@ -29,23 +61,8 @@ const ORG_JSON_LD = {
     "EPS Projects Pvt. Ltd. is a leading Electrical & Instrumentation Project Solutions company providing integrated engineering, supply, installation, testing, commissioning, and automation services for industrial and clean-energy projects across India.",
   foundingDate: "2021",
   founder: { "@type": "Person", name: "Digvijay Tanwar" },
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "212, Ansal Chambers - II, Bhikaji Cama Place",
-    addressLocality: "New Delhi",
-    postalCode: "110066",
-    addressCountry: "IN",
-  },
-  contactPoint: [
-    {
-      "@type": "ContactPoint",
-      telephone: "+91-98107-31116",
-      contactType: "sales",
-      email: "info@epsprojects.in",
-      areaServed: "IN",
-      availableLanguage: ["en", "hi"],
-    },
-  ],
+  address: POSTAL_ADDRESS,
+  contactPoint: CONTACT_POINTS,
   email: "info@epsprojects.in",
   areaServed: "India",
   knowsAbout: [
@@ -58,9 +75,35 @@ const ORG_JSON_LD = {
   ],
 };
 
+const LOCAL_BUSINESS_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": `${SITE_URL}/#localbusiness`,
+  name: SITE_NAME,
+  alternateName: "EPS Projects",
+  url: SITE_URL,
+  logo: SITE_LOGO,
+  image: SITE_LOGO,
+  email: "info@epsprojects.in",
+  telephone: "+919810731116",
+  foundingDate: "2021",
+  parentOrganization: { "@id": `${SITE_URL}/#organization` },
+  address: POSTAL_ADDRESS,
+  areaServed: "IN",
+  contactPoint: CONTACT_POINTS,
+};
+
 function NotFoundComponent() {
   return (
     <div className="bg-zinc-950 min-h-screen flex items-center justify-center px-4">
+      {/* React 19 hoists these into <head>; gives the 404 its own metadata
+          instead of inheriting the sitewide root title/description. */}
+      <title>404 | EPS Projects</title>
+      <meta
+        name="description"
+        content="The page you are looking for doesn't exist or has been moved. Return to the EPS Projects homepage."
+      />
+      <meta name="robots" content="noindex" />
       <div className="text-center">
         <p className="text-7xl font-bold text-cyan-400 mb-4">404</p>
         <h1 className="text-2xl md:text-3xl font-bold text-white mb-4">Page Not Found</h1>
@@ -131,11 +174,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: "/favicon.ico", sizes: "any" },
+      { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
     ],
     scripts: [
       {
         type: "application/ld+json",
         children: JSON.stringify(ORG_JSON_LD),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(LOCAL_BUSINESS_JSON_LD),
       },
     ],
   }),
@@ -171,8 +223,19 @@ function RootComponent() {
         <Outlet />
       ) : (
         <>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-blue-600 focus:px-4 focus:py-2 focus:font-medium focus:text-white focus:shadow-lg"
+          >
+            Skip to main content
+          </a>
           <Navbar />
-          <main data-testid="page-main">
+          <main
+            id="main-content"
+            tabIndex={-1}
+            data-testid="page-main"
+            className="focus:outline-none"
+          >
             <Outlet />
           </main>
           <Footer />

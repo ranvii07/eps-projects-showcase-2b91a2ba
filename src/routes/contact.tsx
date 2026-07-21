@@ -13,6 +13,7 @@ export const Route = createFileRoute("/contact")({
     }),
   component: () => (
     <div data-testid="contact-page" className="pt-20">
+      <h1 className="sr-only">Contact EPS Projects</h1>
       <Contact />
       <FAQ />
     </div>

@@ -16,7 +16,10 @@ const loginSchema = z.object({
 
 export const Route = createFileRoute("/admin/login")({
   ssr: false,
-  head: () => buildPageHead({ title: "Admin Sign In", path: "/admin/login" }),
+  head: () => {
+    const head = buildPageHead({ title: "Admin Sign In", path: "/admin/login" });
+    return { ...head, meta: [...head.meta, { name: "robots", content: "noindex,nofollow" }] };
+  },
   beforeLoad: async () => {
     const { data } = await supabase.auth.getUser();
     if (data.user) {
@@ -54,17 +57,21 @@ function AdminLoginPage() {
       <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
         <CardHeader className="text-center">
           <img
-            src="https://customer-assets.emergentagent.com/job_engineeringsps/artifacts/vuj1ba3q_edit1%20epsp%20%281%29.png"
+            src="/eps-logo.png"
             alt="EPS Projects"
             className="h-12 w-auto mx-auto mb-4 brightness-0 invert"
           />
           <CardTitle className="text-white text-2xl">EPS CMS</CardTitle>
-          <CardDescription className="text-slate-400">Sign in to manage site content</CardDescription>
+          <CardDescription className="text-slate-400">
+            Sign in to manage site content
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-slate-200">Email</Label>
+              <Label htmlFor="email" className="text-slate-200">
+                Email
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -76,7 +83,9 @@ function AdminLoginPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-slate-200">Password</Label>
+              <Label htmlFor="password" className="text-slate-200">
+                Password
+              </Label>
               <Input
                 id="password"
                 type="password"

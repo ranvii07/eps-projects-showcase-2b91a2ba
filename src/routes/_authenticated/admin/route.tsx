@@ -10,7 +10,6 @@ import {
   ShieldCheck,
   Award,
   Mail,
-  Settings as SettingsIcon,
   LogOut,
 } from "lucide-react";
 import {
@@ -38,10 +37,13 @@ const navItems = [
   { title: "HSE", url: "/admin/hse", icon: ShieldCheck },
   { title: "Credentials", url: "/admin/credentials", icon: Award },
   { title: "Contact Management", url: "/admin/contact-management", icon: Mail },
-  { title: "Settings", url: "/admin/settings", icon: SettingsIcon },
+  // Settings (/admin/settings) intentionally omitted until T5.3 builds the route.
 ] as const;
 
 export const Route = createFileRoute("/_authenticated/admin")({
+  head: () => ({
+    meta: [{ name: "robots", content: "noindex,nofollow" }],
+  }),
   component: AdminLayout,
 });
 
@@ -54,6 +56,21 @@ function AdminLayout() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? null));
   }, []);
+
+  // The staff gate only runs in beforeLoad (i.e. on navigation). If the session
+  // ends while the CMS is open — signed out in another tab, token revoked, or a
+  // failed refresh — every query would start failing with raw RLS errors while
+  // the UI stays mounted. Fail closed instead: drop cached data and return to
+  // the login screen as soon as Supabase reports the session is gone.
+  useEffect(() => {
+    const { data: subscription } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") {
+        queryClient.clear();
+        navigate({ to: "/admin/login", replace: true });
+      }
+    });
+    return () => subscription.subscription.unsubscribe();
+  }, [navigate, queryClient]);
 
   const handleSignOut = async () => {
     await queryClient.cancelQueries();

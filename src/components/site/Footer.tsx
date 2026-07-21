@@ -1,13 +1,36 @@
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+
+type CredentialRow = { id: string; kind: string; label: string | null; value: string | null };
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [credentials, setCredentials] = useState<CredentialRow[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const { data } = await supabase
+        .from("company_credentials")
+        .select("id,kind,label,value")
+        .eq("published", true)
+        .in("kind", ["CIN", "PAN", "GSTIN"])
+        .order("sort_order", { ascending: true });
+      if (!active) return;
+      setCredentials(((data as CredentialRow[]) ?? []).filter((c) => c.value));
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const quickLinks = [
     { name: "Home", to: "/" },
     { name: "About Us", to: "/about" },
     { name: "Services", to: "/services" },
+    { name: "Industries", to: "/industries" },
     { name: "Why Choose Us", to: "/why-choose-us" },
     { name: "Projects", to: "/projects" },
     { name: "Clients", to: "/clients" },
@@ -21,13 +44,14 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <Link to="/" data-testid="footer-logo">
               <img
-                src="https://customer-assets.emergentagent.com/job_engineeringsps/artifacts/vuj1ba3q_edit1%20epsp%20%281%29.png"
+                src="/eps-logo.png"
                 alt="EPS Projects Logo"
                 className="h-12 w-auto mb-4 brightness-0 invert"
               />
             </Link>
             <p className="text-slate-400 leading-relaxed mb-4">
-              Leading provider of Electrical &amp; Instrumentation engineering solutions with over 25 years of industry experience.
+              Leading provider of Electrical &amp; Instrumentation engineering solutions, backed by
+              a leadership team with over 25 years of industry experience.
             </p>
           </div>
 
@@ -66,30 +90,52 @@ const Footer = () => {
               <li className="flex items-start space-x-3">
                 <MapPin className="text-cyan-400 flex-shrink-0 mt-1" size={18} />
                 <span className="text-slate-400 text-sm">
-                  212, Ansal Chambers - II,<br />
-                  Bhikaji Cama Place,<br />
+                  212, 2nd Floor, Ansal Chamber-2,
+                  <br />
+                  6 Bhikaji Cama Place,
+                  <br />
                   New Delhi – 110 066
                 </span>
               </li>
               <li className="flex items-start space-x-3">
                 <Phone className="text-cyan-400 flex-shrink-0 mt-1" size={18} />
-                <div className="text-slate-400 text-sm">
-                  <a href="tel:+919810731116" className="hover:text-cyan-400 transition-colors block">
-                    +91 98107-31116
-                  </a>
-                  <a href="tel:+919315617532" className="hover:text-cyan-400 transition-colors block">
-                    +91 93156 17532
-                  </a>
+                <div className="text-slate-400 text-sm space-y-2">
+                  <div>
+                    <span className="block text-slate-300">Digvijay Tanwar, Director</span>
+                    <a
+                      href="tel:+919810731116"
+                      className="hover:text-cyan-400 transition-colors block"
+                    >
+                      +91 98107 31116
+                    </a>
+                  </div>
+                  <div>
+                    <span className="block text-slate-300">
+                      Surender Chahal, Chief Operating Officer
+                    </span>
+                    <a
+                      href="tel:+919071970000"
+                      className="hover:text-cyan-400 transition-colors block"
+                    >
+                      +91 90719 70000
+                    </a>
+                  </div>
                 </div>
               </li>
               <li className="flex items-start space-x-3">
                 <Mail className="text-cyan-400 flex-shrink-0 mt-1" size={18} />
-                <div className="text-slate-400 text-sm">
-                  <a href="mailto:dvt@epsprojects.in" className="hover:text-cyan-400 transition-colors block">
-                    dvt@epsprojects.in
-                  </a>
-                  <a href="mailto:info@epsprojects.in" className="hover:text-cyan-400 transition-colors block">
+                <div className="text-slate-400 text-sm space-y-1">
+                  <a
+                    href="mailto:info@epsprojects.in"
+                    className="hover:text-cyan-400 transition-colors block"
+                  >
                     info@epsprojects.in
+                  </a>
+                  <a
+                    href="mailto:surender@epsprojects.in"
+                    className="hover:text-cyan-400 transition-colors block"
+                  >
+                    surender@epsprojects.in
                   </a>
                 </div>
               </li>
@@ -97,25 +143,35 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-slate-400 text-sm text-center md:text-left">
-            © {currentYear} EPS Projects Private Limited. All rights reserved.
-          </p>
-          <div className="flex items-center space-x-6">
-            <Link
-              to="/privacy"
-              className="text-slate-400 hover:text-cyan-400 transition-colors text-sm"
-              data-testid="footer-link-privacy"
+        <div className="border-t border-slate-800 mt-12 pt-8">
+          {credentials.length > 0 && (
+            <p
+              className="text-slate-500 text-xs text-center md:text-left mb-4"
+              data-testid="footer-credentials"
             >
-              Privacy Policy
-            </Link>
-            <Link
-              to="/terms"
-              className="text-slate-400 hover:text-cyan-400 transition-colors text-sm"
-              data-testid="footer-link-terms"
-            >
-              Terms &amp; Conditions
-            </Link>
+              {credentials.map((c) => `${c.label || c.kind}: ${c.value}`).join("  •  ")}
+            </p>
+          )}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-slate-400 text-sm text-center md:text-left">
+              © {currentYear} EPS Projects Private Limited. All rights reserved.
+            </p>
+            <div className="flex items-center space-x-6">
+              <Link
+                to="/privacy"
+                className="text-slate-400 hover:text-cyan-400 transition-colors text-sm"
+                data-testid="footer-link-privacy"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                to="/terms"
+                className="text-slate-400 hover:text-cyan-400 transition-colors text-sm"
+                data-testid="footer-link-terms"
+              >
+                Terms &amp; Conditions
+              </Link>
+            </div>
           </div>
         </div>
       </div>

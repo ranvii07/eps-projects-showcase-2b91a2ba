@@ -12,6 +12,7 @@ export const Route = createFileRoute("/why-choose-us")({
     }),
   component: () => (
     <div data-testid="why-choose-us-page" className="pt-20">
+      <h1 className="sr-only">Why Choose EPS Projects</h1>
       <WhyChooseUs />
     </div>
   ),

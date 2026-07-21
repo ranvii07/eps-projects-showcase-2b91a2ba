@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Upload, Loader2, ImageIcon } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, Loader2, RefreshCw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,6 +36,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Card } from "@/components/ui/card";
+import SignedImage from "@/components/site/SignedImage";
+import { UPLOAD_ACCEPT, validateUploadFile } from "@/lib/upload";
 
 const BUCKET = "project-images";
 
@@ -81,6 +84,35 @@ const emptyForm: FormState = {
   published: false,
 };
 
+const sortOrderField = z
+  .string()
+  .trim()
+  .refine((v) => /^\d+$/.test(v) && Number(v) <= 100000, "Whole number between 0 and 100000");
+
+const projectSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(200, "Max 200 characters"),
+  client: z.string().trim().max(200, "Max 200 characters"),
+  industry: z.string().trim().max(200, "Max 200 characters"),
+  location: z.string().trim().max(200, "Max 200 characters"),
+  status: z.string().trim().max(100, "Max 100 characters"),
+  description: z.string().trim().max(5000, "Max 5000 characters"),
+  project_value: z
+    .string()
+    .refine(
+      (v) => v.trim() === "" || (/^\d+(\.\d+)?$/.test(v.trim()) && Number(v) >= 0),
+      "Enter a non-negative number",
+    ),
+  completion_date: z
+    .string()
+    .refine((v) => v === "" || !Number.isNaN(Date.parse(v)), "Enter a valid date"),
+  sort_order: sortOrderField,
+});
+
+type FieldErrors = Partial<Record<keyof FormState, string[]>>;
+
+const fieldError = (msg?: string[]) =>
+  msg?.[0] ? <p className="mt-1 text-xs text-red-400">{msg[0]}</p> : null;
+
 export const Route = createFileRoute("/_authenticated/admin/projects")({
   component: AdminProjectsPage,
 });
@@ -117,46 +149,19 @@ function formToPayload(f: FormState) {
   };
 }
 
-function SignedImage({ path, className }: { path: string | null; className?: string }) {
-  const [url, setUrl] = useState<string | null>(null);
-  useEffect(() => {
-    let active = true;
-    setUrl(null);
-    if (!path) return;
-    supabase.storage
-      .from(BUCKET)
-      .createSignedUrl(path, 60 * 10)
-      .then(({ data }) => {
-        if (active) setUrl(data?.signedUrl ?? null);
-      });
-    return () => {
-      active = false;
-    };
-  }, [path]);
-  if (!path)
-    return (
-      <div className={`flex items-center justify-center bg-zinc-800 text-zinc-600 ${className ?? ""}`}>
-        <ImageIcon className="h-4 w-4" />
-      </div>
-    );
-  if (!url)
-    return (
-      <div className={`flex items-center justify-center bg-zinc-800 ${className ?? ""}`}>
-        <Loader2 className="h-4 w-4 animate-spin text-zinc-500" />
-      </div>
-    );
-  return <img src={url} alt="" className={`object-cover ${className ?? ""}`} />;
-}
-
 function AdminProjectsPage() {
   const [rows, setRows] = useState<ProjectRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<ProjectRow | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [pendingUpload, setPendingUpload] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<ProjectRow | null>(null);
+  const [search, setSearch] = useState("");
+  const [errors, setErrors] = useState<FieldErrors>({});
 
   const load = async () => {
     setLoading(true);
@@ -166,6 +171,7 @@ function AdminProjectsPage() {
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: false });
     if (error) toast.error("Failed to load", { description: error.message });
+    setLoadError(!!error);
     setRows((data as ProjectRow[]) ?? []);
     setLoading(false);
   };
@@ -177,15 +183,24 @@ function AdminProjectsPage() {
   const openCreate = () => {
     setEditing(null);
     setForm(emptyForm);
+    setErrors({});
+    setPendingUpload(null);
     setDialogOpen(true);
   };
   const openEdit = (r: ProjectRow) => {
     setEditing(r);
     setForm(rowToForm(r));
+    setErrors({});
+    setPendingUpload(null);
     setDialogOpen(true);
   };
 
   const handleUpload = async (file: File) => {
+    const validationError = validateUploadFile(file, "image");
+    if (validationError) {
+      toast.error(validationError);
+      return;
+    }
     setUploading(true);
     const ext = file.name.split(".").pop() || "bin";
     const path = `projects/${crypto.randomUUID()}.${ext}`;
@@ -199,19 +214,33 @@ function AdminProjectsPage() {
       toast.error("Upload failed", { description: error.message });
       return;
     }
-    // Remove previous object if replacing
-    if (form.image_url && form.image_url !== path) {
-      await supabase.storage.from(BUCKET).remove([form.image_url]);
+    // Discard a prior upload from this unsaved session; never touch the saved
+    // object — the one it replaces is removed on save (storage hygiene, T7.5).
+    if (pendingUpload && pendingUpload !== path) {
+      await supabase.storage.from(BUCKET).remove([pendingUpload]);
     }
+    setPendingUpload(path);
     setForm((f) => ({ ...f, image_url: path }));
     toast.success("Image uploaded");
   };
 
+  const closeDialog = () => {
+    // Discard an uploaded-but-unsaved object so it does not orphan in storage.
+    if (pendingUpload) {
+      void supabase.storage.from(BUCKET).remove([pendingUpload]);
+      setPendingUpload(null);
+    }
+    setDialogOpen(false);
+  };
+
   const handleSave = async () => {
-    if (!form.name.trim()) {
-      toast.error("Name is required");
+    const parsed = projectSchema.safeParse(form);
+    if (!parsed.success) {
+      setErrors(parsed.error.flatten().fieldErrors);
+      toast.error("Please fix the highlighted fields");
       return;
     }
+    setErrors({});
     setSaving(true);
     const payload = formToPayload(form);
     const { error } = editing
@@ -222,6 +251,13 @@ function AdminProjectsPage() {
       toast.error("Save failed", { description: error.message });
       return;
     }
+    // Save committed: remove the object this upload replaced (if it changed),
+    // then clear the pending marker so closing the dialog keeps the saved file.
+    const savedImage = form.image_url.trim() || null;
+    if (editing && editing.image_url && editing.image_url !== savedImage) {
+      await supabase.storage.from(BUCKET).remove([editing.image_url]);
+    }
+    setPendingUpload(null);
     toast.success(editing ? "Project updated" : "Project created");
     setDialogOpen(false);
     await load();
@@ -243,7 +279,12 @@ function AdminProjectsPage() {
     await load();
   };
 
-  const count = useMemo(() => rows.length, [rows]);
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return rows;
+    return rows.filter((r) => r.name.toLowerCase().includes(q));
+  }, [rows, search]);
+  const filtering = search.trim() !== "";
 
   return (
     <div className="space-y-6">
@@ -251,13 +292,25 @@ function AdminProjectsPage() {
         <div>
           <h1 className="text-2xl font-bold text-white">Projects</h1>
           <p className="text-slate-400 mt-1 text-sm">
-            {loading ? "Loading…" : `${count} project${count === 1 ? "" : "s"}`}
+            {loading
+              ? "Loading…"
+              : `${filtered.length}${filtering ? ` of ${rows.length}` : ""} project${rows.length === 1 ? "" : "s"}`}
           </p>
         </div>
         <Button onClick={openCreate} className="bg-cyan-500 hover:bg-cyan-400 text-zinc-950">
           <Plus className="h-4 w-4 mr-2" />
           New Project
         </Button>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <Input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by name…"
+          aria-label="Search projects by name"
+          className="bg-zinc-900 border-zinc-800 w-full sm:max-w-xs"
+        />
       </div>
 
       <Card className="bg-zinc-900 border-zinc-800 p-0 overflow-hidden">
@@ -275,17 +328,53 @@ function AdminProjectsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {!loading && rows.length === 0 && (
+            {loading && (
+              <TableRow className="border-zinc-800 hover:bg-transparent">
+                <TableCell colSpan={8} className="text-center text-slate-500 py-10">
+                  <Loader2 className="h-4 w-4 animate-spin inline mr-2" />
+                  Loading projects…
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading && loadError && (
+              <TableRow className="border-zinc-800 hover:bg-transparent">
+                <TableCell colSpan={8} className="text-center text-slate-500 py-10">
+                  <p className="mb-3">Couldn't load projects.</p>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={load}
+                    className="border-zinc-700 text-slate-200 hover:bg-zinc-800"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5 mr-2" />
+                    Retry
+                  </Button>
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading && !loadError && rows.length === 0 && (
               <TableRow className="border-zinc-800 hover:bg-transparent">
                 <TableCell colSpan={8} className="text-center text-slate-500 py-10">
                   No projects yet. Click "New Project" to add one.
                 </TableCell>
               </TableRow>
             )}
-            {rows.map((r) => (
+            {!loading && !loadError && rows.length > 0 && filtered.length === 0 && (
+              <TableRow className="border-zinc-800 hover:bg-transparent">
+                <TableCell colSpan={8} className="text-center text-slate-500 py-10">
+                  No projects match your search.
+                </TableCell>
+              </TableRow>
+            )}
+            {filtered.map((r) => (
               <TableRow key={r.id} className="border-zinc-800 hover:bg-zinc-800/40">
                 <TableCell>
-                  <SignedImage path={r.image_url} className="h-12 w-16 rounded" />
+                  <SignedImage
+                    bucket={BUCKET}
+                    path={r.image_url}
+                    className="h-12 w-16 rounded"
+                    fit="object-cover"
+                  />
                 </TableCell>
                 <TableCell className="text-white font-medium">{r.name}</TableCell>
                 <TableCell className="text-slate-300">{r.client ?? "—"}</TableCell>
@@ -311,6 +400,7 @@ function AdminProjectsPage() {
                       variant="outline"
                       className="border-zinc-700 text-slate-200 hover:bg-zinc-800"
                       onClick={() => openEdit(r)}
+                      aria-label={`Edit project ${r.name}`}
                     >
                       <Pencil className="h-3.5 w-3.5" />
                     </Button>
@@ -319,6 +409,7 @@ function AdminProjectsPage() {
                       variant="outline"
                       className="border-zinc-700 text-red-400 hover:bg-red-500/10 hover:text-red-300"
                       onClick={() => setDeleteTarget(r)}
+                      aria-label={`Delete project ${r.name}`}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
@@ -330,7 +421,7 @@ function AdminProjectsPage() {
         </Table>
       </Card>
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog open={dialogOpen} onOpenChange={(o) => !o && closeDialog()}>
         <DialogContent className="bg-zinc-900 border-zinc-800 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editing ? "Edit Project" : "New Project"}</DialogTitle>
@@ -348,6 +439,7 @@ function AdminProjectsPage() {
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="bg-zinc-950 border-zinc-700"
               />
+              {fieldError(errors.name)}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -359,6 +451,7 @@ function AdminProjectsPage() {
                   onChange={(e) => setForm({ ...form, client: e.target.value })}
                   className="bg-zinc-950 border-zinc-700"
                 />
+                {fieldError(errors.client)}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="industry">Industry</Label>
@@ -368,6 +461,7 @@ function AdminProjectsPage() {
                   onChange={(e) => setForm({ ...form, industry: e.target.value })}
                   className="bg-zinc-950 border-zinc-700"
                 />
+                {fieldError(errors.industry)}
               </div>
             </div>
 
@@ -380,6 +474,7 @@ function AdminProjectsPage() {
                   onChange={(e) => setForm({ ...form, location: e.target.value })}
                   className="bg-zinc-950 border-zinc-700"
                 />
+                {fieldError(errors.location)}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="status">Status</Label>
@@ -390,6 +485,7 @@ function AdminProjectsPage() {
                   onChange={(e) => setForm({ ...form, status: e.target.value })}
                   className="bg-zinc-950 border-zinc-700"
                 />
+                {fieldError(errors.status)}
               </div>
             </div>
 
@@ -402,6 +498,7 @@ function AdminProjectsPage() {
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 className="bg-zinc-950 border-zinc-700"
               />
+              {fieldError(errors.description)}
             </div>
 
             <div className="grid grid-cols-3 gap-4">
@@ -415,6 +512,7 @@ function AdminProjectsPage() {
                   onChange={(e) => setForm({ ...form, project_value: e.target.value })}
                   className="bg-zinc-950 border-zinc-700"
                 />
+                {fieldError(errors.project_value)}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="completion_date">Completion Date</Label>
@@ -425,6 +523,7 @@ function AdminProjectsPage() {
                   onChange={(e) => setForm({ ...form, completion_date: e.target.value })}
                   className="bg-zinc-950 border-zinc-700"
                 />
+                {fieldError(errors.completion_date)}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="sort_order">Sort Order</Label>
@@ -435,18 +534,24 @@ function AdminProjectsPage() {
                   onChange={(e) => setForm({ ...form, sort_order: e.target.value })}
                   className="bg-zinc-950 border-zinc-700"
                 />
+                {fieldError(errors.sort_order)}
               </div>
             </div>
 
             <div className="grid gap-2">
               <Label>Project Image</Label>
               <div className="flex items-center gap-4">
-                <SignedImage path={form.image_url || null} className="h-20 w-28 rounded border border-zinc-800" />
+                <SignedImage
+                  bucket={BUCKET}
+                  path={form.image_url || null}
+                  className="h-20 w-28 rounded border border-zinc-800"
+                  fit="object-cover"
+                />
                 <div className="flex-1 space-y-2">
                   <label className="inline-flex">
                     <input
                       type="file"
-                      accept="image/*"
+                      accept={UPLOAD_ACCEPT.image}
                       className="hidden"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
@@ -495,7 +600,7 @@ function AdminProjectsPage() {
           <DialogFooter>
             <Button
               variant="outline"
-              onClick={() => setDialogOpen(false)}
+              onClick={closeDialog}
               className="border-zinc-700 text-slate-200 hover:bg-zinc-800"
             >
               Cancel
@@ -517,7 +622,8 @@ function AdminProjectsPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete project?</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-400">
-              This will permanently delete "{deleteTarget?.name}" and its uploaded image. This cannot be undone.
+              This will permanently delete "{deleteTarget?.name}" and its uploaded image. This
+              cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
