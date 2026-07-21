@@ -1,7 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Upload, Loader2, FileText, ExternalLink } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Upload,
+  Loader2,
+  FileText,
+  ExternalLink,
+  RefreshCw,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +44,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Card } from "@/components/ui/card";
+import { getSignedUrl } from "@/lib/use-signed-url";
+import { UPLOAD_ACCEPT, validateUploadFile } from "@/lib/upload";
 
 const BUCKET = "documents";
 
@@ -71,6 +83,25 @@ const emptyForm: FormState = {
   published: false,
 };
 
+const validDate = (v: string) => v === "" || !Number.isNaN(Date.parse(v));
+
+const credentialSchema = z.object({
+  kind: z.string().trim().min(1, "Kind is required").max(100, "Max 100 characters"),
+  label: z.string().trim().max(200, "Max 200 characters"),
+  value: z.string().trim().max(200, "Max 200 characters"),
+  issued_on: z.string().refine(validDate, "Enter a valid date"),
+  expires_on: z.string().refine(validDate, "Enter a valid date"),
+  sort_order: z
+    .string()
+    .trim()
+    .refine((v) => /^\d+$/.test(v) && Number(v) <= 100000, "Whole number between 0 and 100000"),
+});
+
+type FieldErrors = Partial<Record<keyof FormState, string[]>>;
+
+const fieldError = (msg?: string[]) =>
+  msg?.[0] ? <p className="mt-1 text-xs text-red-400">{msg[0]}</p> : null;
+
 export const Route = createFileRoute("/_authenticated/admin/credentials")({
   component: AdminCredentialsPage,
 });
@@ -102,23 +133,26 @@ function formToPayload(f: FormState) {
 }
 
 async function openSignedUrl(path: string) {
-  const { data, error } = await supabase.storage.from(BUCKET).createSignedUrl(path, 60 * 10);
-  if (error || !data?.signedUrl) {
-    toast.error("Could not open document", { description: error?.message });
+  const { url, error } = await getSignedUrl(BUCKET, path);
+  if (!url) {
+    toast.error("Could not open document", { description: error ?? undefined });
     return;
   }
-  window.open(data.signedUrl, "_blank", "noopener,noreferrer");
+  window.open(url, "_blank", "noopener,noreferrer");
 }
 
 function AdminCredentialsPage() {
   const [rows, setRows] = useState<CredentialRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<CredentialRow | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [pendingUpload, setPendingUpload] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<CredentialRow | null>(null);
+  const [errors, setErrors] = useState<FieldErrors>({});
 
   const load = async () => {
     setLoading(true);
@@ -128,6 +162,7 @@ function AdminCredentialsPage() {
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: false });
     if (error) toast.error("Failed to load", { description: error.message });
+    setLoadError(!!error);
     setRows((data as CredentialRow[]) ?? []);
     setLoading(false);
   };
@@ -139,15 +174,24 @@ function AdminCredentialsPage() {
   const openCreate = () => {
     setEditing(null);
     setForm(emptyForm);
+    setErrors({});
+    setPendingUpload(null);
     setDialogOpen(true);
   };
   const openEdit = (r: CredentialRow) => {
     setEditing(r);
     setForm(rowToForm(r));
+    setErrors({});
+    setPendingUpload(null);
     setDialogOpen(true);
   };
 
   const handleUpload = async (file: File) => {
+    const validationError = validateUploadFile(file, "document");
+    if (validationError) {
+      toast.error(validationError);
+      return;
+    }
     setUploading(true);
     const ext = file.name.split(".").pop() || "bin";
     const path = `credentials/${crypto.randomUUID()}.${ext}`;
@@ -161,18 +205,33 @@ function AdminCredentialsPage() {
       toast.error("Upload failed", { description: error.message });
       return;
     }
-    if (form.document_url && form.document_url !== path) {
-      await supabase.storage.from(BUCKET).remove([form.document_url]);
+    // Discard a prior upload from this unsaved session; never touch the saved
+    // object — the one it replaces is removed on save (storage hygiene, T7.5).
+    if (pendingUpload && pendingUpload !== path) {
+      await supabase.storage.from(BUCKET).remove([pendingUpload]);
     }
+    setPendingUpload(path);
     setForm((f) => ({ ...f, document_url: path }));
     toast.success("Document uploaded");
   };
 
+  const closeDialog = () => {
+    // Discard an uploaded-but-unsaved object so it does not orphan in storage.
+    if (pendingUpload) {
+      void supabase.storage.from(BUCKET).remove([pendingUpload]);
+      setPendingUpload(null);
+    }
+    setDialogOpen(false);
+  };
+
   const handleSave = async () => {
-    if (!form.kind.trim()) {
-      toast.error("Kind is required");
+    const parsed = credentialSchema.safeParse(form);
+    if (!parsed.success) {
+      setErrors(parsed.error.flatten().fieldErrors);
+      toast.error("Please fix the highlighted fields");
       return;
     }
+    setErrors({});
     setSaving(true);
     const payload = formToPayload(form);
     const { error } = editing
@@ -183,6 +242,13 @@ function AdminCredentialsPage() {
       toast.error("Save failed", { description: error.message });
       return;
     }
+    // Save committed: remove the object this upload replaced (if it changed),
+    // then clear the pending marker so closing the dialog keeps the saved file.
+    const savedDoc = form.document_url.trim() || null;
+    if (editing && editing.document_url && editing.document_url !== savedDoc) {
+      await supabase.storage.from(BUCKET).remove([editing.document_url]);
+    }
+    setPendingUpload(null);
     toast.success(editing ? "Credential updated" : "Credential created");
     setDialogOpen(false);
     await load();
@@ -237,7 +303,31 @@ function AdminCredentialsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {!loading && rows.length === 0 && (
+            {loading && (
+              <TableRow className="border-zinc-800 hover:bg-transparent">
+                <TableCell colSpan={9} className="text-center text-slate-500 py-10">
+                  <Loader2 className="h-4 w-4 animate-spin inline mr-2" />
+                  Loading credentials…
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading && loadError && (
+              <TableRow className="border-zinc-800 hover:bg-transparent">
+                <TableCell colSpan={9} className="text-center text-slate-500 py-10">
+                  <p className="mb-3">Couldn't load credentials.</p>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={load}
+                    className="border-zinc-700 text-slate-200 hover:bg-zinc-800"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5 mr-2" />
+                    Retry
+                  </Button>
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading && !loadError && rows.length === 0 && (
               <TableRow className="border-zinc-800 hover:bg-transparent">
                 <TableCell colSpan={9} className="text-center text-slate-500 py-10">
                   No credentials yet. Click "New Credential" to add one.
@@ -286,6 +376,7 @@ function AdminCredentialsPage() {
                       variant="outline"
                       className="border-zinc-700 text-slate-200 hover:bg-zinc-800"
                       onClick={() => openEdit(r)}
+                      aria-label={`Edit credential ${r.label || r.kind}`}
                     >
                       <Pencil className="h-3.5 w-3.5" />
                     </Button>
@@ -294,6 +385,7 @@ function AdminCredentialsPage() {
                       variant="outline"
                       className="border-zinc-700 text-red-400 hover:bg-red-500/10 hover:text-red-300"
                       onClick={() => setDeleteTarget(r)}
+                      aria-label={`Delete credential ${r.label || r.kind}`}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
@@ -305,7 +397,7 @@ function AdminCredentialsPage() {
         </Table>
       </Card>
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog open={dialogOpen} onOpenChange={(o) => !o && closeDialog()}>
         <DialogContent className="bg-zinc-900 border-zinc-800 text-white max-w-xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editing ? "Edit Credential" : "New Credential"}</DialogTitle>
@@ -325,6 +417,7 @@ function AdminCredentialsPage() {
                   placeholder="certification, license, registration…"
                   className="bg-zinc-950 border-zinc-700"
                 />
+                {fieldError(errors.kind)}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="sort_order">Sort Order</Label>
@@ -335,6 +428,7 @@ function AdminCredentialsPage() {
                   onChange={(e) => setForm({ ...form, sort_order: e.target.value })}
                   className="bg-zinc-950 border-zinc-700"
                 />
+                {fieldError(errors.sort_order)}
               </div>
             </div>
 
@@ -346,6 +440,7 @@ function AdminCredentialsPage() {
                 onChange={(e) => setForm({ ...form, label: e.target.value })}
                 className="bg-zinc-950 border-zinc-700"
               />
+              {fieldError(errors.label)}
             </div>
 
             <div className="grid gap-2">
@@ -357,6 +452,7 @@ function AdminCredentialsPage() {
                 placeholder="Certificate number, registration ID…"
                 className="bg-zinc-950 border-zinc-700"
               />
+              {fieldError(errors.value)}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -369,6 +465,7 @@ function AdminCredentialsPage() {
                   onChange={(e) => setForm({ ...form, issued_on: e.target.value })}
                   className="bg-zinc-950 border-zinc-700"
                 />
+                {fieldError(errors.issued_on)}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="expires_on">Expires On</Label>
@@ -379,6 +476,7 @@ function AdminCredentialsPage() {
                   onChange={(e) => setForm({ ...form, expires_on: e.target.value })}
                   className="bg-zinc-950 border-zinc-700"
                 />
+                {fieldError(errors.expires_on)}
               </div>
             </div>
 
@@ -393,7 +491,7 @@ function AdminCredentialsPage() {
                     <label className="inline-flex">
                       <input
                         type="file"
-                        accept="application/pdf,image/*"
+                        accept={UPLOAD_ACCEPT.document}
                         className="hidden"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
@@ -429,7 +527,9 @@ function AdminCredentialsPage() {
                     )}
                   </div>
                   {form.document_url && (
-                    <p className="text-xs text-slate-500 break-all font-mono">{form.document_url}</p>
+                    <p className="text-xs text-slate-500 break-all font-mono">
+                      {form.document_url}
+                    </p>
                   )}
                 </div>
               </div>
@@ -455,7 +555,7 @@ function AdminCredentialsPage() {
           <DialogFooter>
             <Button
               variant="outline"
-              onClick={() => setDialogOpen(false)}
+              onClick={closeDialog}
               className="border-zinc-700 text-slate-200 hover:bg-zinc-800"
             >
               Cancel
@@ -477,7 +577,9 @@ function AdminCredentialsPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete credential?</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-400">
-              This will permanently delete "{deleteTarget?.kind}{deleteTarget?.label ? ` — ${deleteTarget.label}` : ""}" and its uploaded document. This cannot be undone.
+              This will permanently delete "{deleteTarget?.kind}
+              {deleteTarget?.label ? ` — ${deleteTarget.label}` : ""}" and its uploaded document.
+              This cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

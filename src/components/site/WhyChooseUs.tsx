@@ -1,7 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Award, Users, Leaf, DollarSign, Clock, Shield, type LucideIcon } from "lucide-react";
+import { Factory, Cpu, TrendingDown, Gauge, Zap, Handshake, type LucideIcon } from "lucide-react";
 
-type Reason = { icon: LucideIcon; title: string; description: string; color: keyof typeof colorMap };
+type Reason = {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  color: keyof typeof colorMap;
+};
 
 const colorMap = {
   blue: "bg-blue-100 text-blue-600 group-hover:bg-blue-600",
@@ -12,48 +17,48 @@ const colorMap = {
   cyan: "bg-cyan-100 text-cyan-600 group-hover:bg-cyan-600",
 } as const;
 
-const reasons:Reason[] = [
+const reasons: Reason[] = [
   {
-    icon: Award,
-    title: "Industrial Project Expertise",
+    icon: Factory,
+    title: "Modern Industrial Units",
     description:
-      "Our team has successfully executed projects across power, sugar, distillery, ethanol, steel, cement, infrastructure, oil & gas, and hydro power sectors, enabling us to understand the unique challenges of each industry.",
+      "Establishment of advanced, highly-efficient industrial systems using the latest technology and engineering practices.",
     color: "blue",
   },
   {
-    icon: Clock,
-    title: "Integrated Project Delivery",
+    icon: Cpu,
+    title: "Automation-First Approach",
     description:
-      "From engineering and procurement to installation, commissioning, and support, we provide a complete project execution model that simplifies coordination and improves project outcomes.",
+      "Advanced automation for higher accuracy & control of the process — achieving efficient, reliable production output.",
     color: "purple",
   },
   {
-    icon: Leaf,
-    title: "Pan-India Project Execution",
+    icon: TrendingDown,
+    title: "Lower Project Costs",
     description:
-      "With projects executed across multiple states and an international project in Nepal, EPS Projects has demonstrated its ability to successfully deliver solutions across diverse geographic and operational environments.",
+      "A single, integrated partner for procurement and execution removes the overheads and coordination gaps of fragmented multi-vendor approaches.",
     color: "emerald",
   },
   {
-    icon: Shield,
-    title: "Quality, Safety & Compliance",
+    icon: Gauge,
+    title: "Higher Plant Efficiency",
     description:
-      "Safety and quality are embedded in every stage of our work. Our commitment to Health, Safety & Environment (HSE) practices ensures reliable execution, regulatory compliance, and protection of people, assets, and the environment.",
+      "Superior electrical design, precise instrumentation, and quality commissioning that deliver dependable, efficient plant performance.",
     color: "green",
   },
   {
-    icon: Users,
-    title: "Long Term",
+    icon: Zap,
+    title: "Fast-Track Execution",
     description:
-      "We focus on building long-term relationships by understanding client requirements, delivering practical solutions, and providing dependable support even after project completion.",
-    color: "cyan",
+      "Unconventional construction methods with prefab panels — fast execution, minimal rework, maximum quality.",
+    color: "orange",
   },
   {
-    icon: DollarSign,
-    title: "Engineering Excelence & Innovation",
+    icon: Handshake,
+    title: "Customer-First Delivery",
     description:
-      "By leveraging modern engineering practices, efficient construction methodologies, and advanced automation technologies, we help clients achieve lower project costs, improved process control, higher efficiency, and better operational reliability.",
-    color: "orange",
+      "We deliver time & cost benefits to customers through our engineering & execution capabilities — every project, every time.",
+    color: "cyan",
   },
 ];
 
@@ -63,11 +68,13 @@ const WhyChooseUs = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Comprehensive Electrical & Instrumentation Solutions
+            Why Industrial Clients Choose EPS Projects
           </h2>
           <div className="w-24 h-1 bg-cyan-400 mx-auto mb-6"></div>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            EPS Projects provides end-to-end Electrical, Instrumentation, and Automation solutions designed to support industrial facilities throughout their project lifecycle. Our integrated project delivery approach provides clients with a single execution partner for engineering, procurement, execution, commissioning, and post-project support.
+            Beyond what we deliver, here's why industrial clients choose EPS Projects — one
+            accountable partner combining modern engineering, automation-first execution, and a
+            customer-first commitment on every project.
           </p>
         </div>
 
@@ -81,7 +88,9 @@ const WhyChooseUs = () => {
               >
                 <CardContent className="pt-8">
                   <div className="flex justify-center mb-6">
-                    <div className={`w-20 h-20 rounded-xl flex items-center justify-center transition-all duration-300 ${colorMap[reason.color]}`}>
+                    <div
+                      className={`w-20 h-20 rounded-xl flex items-center justify-center transition-all duration-300 ${colorMap[reason.color]}`}
+                    >
                       <Icon className="group-hover:text-white transition-colors" size={36} />
                     </div>
                   </div>

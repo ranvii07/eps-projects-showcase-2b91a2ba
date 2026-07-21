@@ -12,6 +12,7 @@ export const Route = createFileRoute("/about")({
     }),
   component: () => (
     <div data-testid="about-page" className="pt-20">
+      <h1 className="sr-only">About EPS Projects Pvt. Ltd.</h1>
       <About />
     </div>
   ),

@@ -50,17 +50,30 @@ const About = () => {
                 src="https://images.unsplash.com/photo-1554021279-722f30a555be?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDJ8MHwxfHNlYXJjaHwyfHxlbGVjdHJpY2FsJTIwY29udHJvbCUyMHBhbmVsc3xlbnwwfHx8fDE3NjcwMDk2Mjd8MA&ixlib=rb-4.1.0&q=85"
                 alt="Control Panel"
                 className="rounded-lg shadow-xl w-full h-[400px] object-cover"
+                loading="lazy"
               />
             </div>
             <div className="space-y-6">
               <p className="text-slate-300 leading-relaxed text-lg">
-                <strong>EPS Projects Pvt. Ltd.</strong> is a leading Electrical &amp; Instrumentation Project Solutions company providing integrated engineering, supply, installation, testing, commissioning, and automation services for industrial and clean-energy projects across India.
+                <strong>EPS Projects Pvt. Ltd.</strong> offers comprehensive Electrical &amp;
+                Instrumentation Project solutions — integrating design, supply, installation,
+                automation, and commissioning under one expert roof.
               </p>
               <p className="text-slate-300 leading-relaxed text-lg">
-                Established in 2021, the company serves a wide range of industries including Co-generation Power Plants, Captive Power Plants, Distilleries, Ethanol Plants, Sugar Plants, Steel Plants, Cement Plants, Oil &amp; Gas, Infrastructure, Hydro Power, and Pollution Control Systems. With a strong focus on quality, safety, and operational excellence, EPS Projects delivers solutions that improve plant efficiency, reliability, and long-term performance.
+                Established in 2021, the company serves a wide range of industries including
+                Co-generation Power Plants, Captive Power Plants, Distilleries, Ethanol Plants,
+                Sugar Plants, Steel Plants, Cement Plants, Oil &amp; Gas, Infrastructure, Hydro
+                Power, and Pollution Control Systems. With a strong focus on quality, safety, and
+                operational excellence, EPS Projects delivers solutions that improve plant
+                efficiency, reliability, and long-term performance.
               </p>
               <p className="text-slate-300 leading-relaxed text-lg">
-                Under the leadership of <strong>Mr. Digvijay Tanwar</strong>, who brings more than two decades of industry experience, EPS Projects has built a reputation for dependable execution, technical expertise, and customer-focused project delivery. By combining modern engineering practices with practical field experience, the company continues to support industrial growth through efficient, cost-effective, and sustainable engineering solutions.
+                Under the leadership of <strong>Mr. Digvijay Tanwar</strong>, who brings more than
+                two decades of industry experience, EPS Projects has built a reputation for
+                dependable execution, technical expertise, and customer-focused project delivery. By
+                combining modern engineering practices with practical field experience, the company
+                continues to support industrial growth through efficient, cost-effective, and
+                sustainable engineering solutions.
               </p>
             </div>
           </div>
@@ -72,14 +85,18 @@ const About = () => {
           </h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              "Electrical and Instrumentation Project Design & Engineering",
-              "Instrumentation, Control & Automation, PLC, DCS and SCADA Solutions",
-              "Safety Instrumented System Design & Implementation",
+              "Electrical & Instrumentation Project Design & Engineering",
+              "Instrumentation, Control & Automation — PLC, DCS, SCADA",
+              "Safety Instrumented System (SIS) Design & Implementation",
               "Functional Safety Management Consulting",
-              "Construction Services",
-              "Low Voltage Electrical",
+              "Construction, Erection & Commissioning Services",
+              "Low Voltage Electrical & ELV Systems",
+              "Engineering, Procurement, Supply, Installation, Automation, Testing, Commissioning",
             ].map((service) => (
-              <div key={service} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-zinc-800 transition-colors">
+              <div
+                key={service}
+                className="flex items-start space-x-3 p-3 rounded-lg hover:bg-zinc-800 transition-colors"
+              >
                 <div className="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-slate-300 font-medium">{service}</p>
               </div>
@@ -90,7 +107,10 @@ const About = () => {
         <div className="bg-gradient-to-br from-zinc-900 to-black rounded-xl shadow-xl p-8 text-white border border-zinc-800">
           <h3 className="text-2xl font-bold mb-4">Our Expertise</h3>
           <p className="text-slate-300 leading-relaxed text-lg">
-            EPS Projects specializes in the integration of products &amp; services primarily towards <strong className="text-cyan-400">Clean Energy plants</strong> like Co-generation Power Plants, Captive Power Plants, Distilleries, Ethanol Plants, Spent wash based Incineration, Waste heat recovery units, Pollution control units etc., achieving clean energy &amp; high efficiency modern generation units.
+            EPS leads integration of E&amp;I solutions for India&apos;s{" "}
+            <strong className="text-cyan-400">clean energy plants</strong>: Co-generation &amp;
+            Captive Power Plants, Distilleries &amp; Ethanol Plants, Spent Wash Incineration
+            Systems, Waste Heat Recovery Units, and Pollution Control Systems.
           </p>
         </div>
 
@@ -104,7 +124,9 @@ const About = () => {
               </div>
               <h3 className="text-xl font-bold text-white mb-4 text-center">Our Mission</h3>
               <p className="text-slate-300 text-center leading-relaxed">
-                Our mission is to constantly deliver high-quality services that satisfy the needs and expectations of our customers.
+                To constantly deliver high-quality E&amp;I services that satisfy the needs and
+                expectations of our customers — on time, within budget, and with zero compromise on
+                safety.
               </p>
             </CardContent>
           </Card>
@@ -118,7 +140,9 @@ const About = () => {
               </div>
               <h3 className="text-xl font-bold text-white mb-4 text-center">Our Vision</h3>
               <p className="text-slate-300 text-center leading-relaxed">
-                Continue to be focused, committed, and challenging to deliver excellence and scale in services.
+                To be focused, committed &amp; challenging — delivering excellence and scale in
+                Electrical, Instrumentation &amp; Automation services across India&apos;s industrial
+                energy sector.
               </p>
             </CardContent>
           </Card>
@@ -130,7 +154,14 @@ const About = () => {
                   <Shield className="text-orange-400" size={32} />
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-white mb-4 text-center">Quality &amp; Safety</h3>
+              <h3 className="text-xl font-bold text-white mb-4 text-center">
+                Quality &amp; Safety
+              </h3>
+              <p className="text-slate-300 text-center leading-relaxed mb-4">
+                We are committed to doing it right the first time — continuously improving to meet
+                customer satisfaction and regulatory requirements in quality, environmental
+                protection, workplace safety, and health.
+              </p>
               {hseContent === null ? (
                 <div className="flex justify-center py-4">
                   <Loader2 className="animate-spin text-orange-400" size={24} />
@@ -140,7 +171,9 @@ const About = () => {
                   Unable to load quality &amp; safety content at the moment. Please try again later.
                 </p>
               ) : hseContent.length === 0 ? (
-                <p className="text-slate-300 text-center leading-relaxed">No quality &amp; safety content available.</p>
+                <p className="text-slate-300 text-center leading-relaxed">
+                  No quality &amp; safety content available.
+                </p>
               ) : (
                 <div className="space-y-4">
                   {hseContent.map((item) => (

@@ -2,10 +2,11 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building2, ArrowRight, Loader2 } from "lucide-react";
+import { Building2, ArrowRight, ImageIcon, Loader2 } from "lucide-react";
 import { buildPageHead } from "@/lib/site";
 import PageHeader from "@/components/site/PageHeader";
 import { supabase } from "@/integrations/supabase/client";
+import { useSignedUrl } from "@/lib/use-signed-url";
 
 const BUCKET = "project-images";
 
@@ -31,20 +32,13 @@ export const Route = createFileRoute("/projects")({
 });
 
 function SignedProjectImage({ path, alt }: { path: string; alt: string }) {
-  const [url, setUrl] = useState<string | null>(null);
-  useEffect(() => {
-    let active = true;
-    setUrl(null);
-    supabase.storage
-      .from(BUCKET)
-      .createSignedUrl(path, 60 * 10)
-      .then(({ data }) => {
-        if (active) setUrl(data?.signedUrl ?? null);
-      });
-    return () => {
-      active = false;
-    };
-  }, [path]);
+  const { url, failed } = useSignedUrl(BUCKET, path);
+  if (failed)
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-zinc-800">
+        <ImageIcon className="h-8 w-8 text-zinc-700" />
+      </div>
+    );
   if (!url)
     return (
       <div className="w-full h-full flex items-center justify-center bg-zinc-800">
@@ -122,7 +116,10 @@ function ProjectsPage() {
                 className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg group"
               >
                 Talk to Our Team
-                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+                <ArrowRight
+                  className="ml-2 group-hover:translate-x-1 transition-transform"
+                  size={20}
+                />
               </Button>
             </div>
           ) : (

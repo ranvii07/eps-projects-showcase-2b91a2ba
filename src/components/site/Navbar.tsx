@@ -7,6 +7,7 @@ const navLinks = [
   { name: "Home", to: "/" },
   { name: "About", to: "/about" },
   { name: "Services", to: "/services" },
+  { name: "Industries", to: "/industries" },
   { name: "Why Choose Us", to: "/why-choose-us" },
   { name: "Projects", to: "/projects" },
   { name: "Clients", to: "/clients" },
@@ -49,11 +50,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center" data-testid="navbar-logo">
-            <img
-              src="https://customer-assets.emergentagent.com/job_engineeringsps/artifacts/vuj1ba3q_edit1%20epsp%20%281%29.png"
-              alt="EPS Projects Logo"
-              className="h-12 w-auto"
-            />
+            <img src="/eps-logo.png" alt="EPS Projects Logo" className="h-12 w-auto" />
           </Link>
 
           <div className="hidden lg:flex items-center space-x-6">
@@ -81,6 +78,9 @@ const Navbar = () => {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="text-slate-200 hover:text-cyan-400 transition-colors"
               data-testid="mobile-menu-toggle"
+              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
             >
               {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
@@ -89,7 +89,11 @@ const Navbar = () => {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-black border-t border-slate-700 shadow-lg" data-testid="mobile-menu">
+        <div
+          id="mobile-menu"
+          className="lg:hidden bg-black border-t border-slate-700 shadow-lg"
+          data-testid="mobile-menu"
+        >
           <div className="px-4 py-4 space-y-3">
             {navLinks.map((link) => (
               <Link

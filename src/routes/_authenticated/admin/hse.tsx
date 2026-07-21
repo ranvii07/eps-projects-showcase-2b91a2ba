@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, RefreshCw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,6 +62,21 @@ const emptyForm: FormState = {
   published: false,
 };
 
+const hseSchema = z.object({
+  section: z.string().trim().min(1, "Section is required").max(100, "Max 100 characters"),
+  title: z.string().trim().max(200, "Max 200 characters"),
+  body: z.string().trim().max(5000, "Max 5000 characters"),
+  sort_order: z
+    .string()
+    .trim()
+    .refine((v) => /^\d+$/.test(v) && Number(v) <= 100000, "Whole number between 0 and 100000"),
+});
+
+type FieldErrors = Partial<Record<keyof FormState, string[]>>;
+
+const fieldError = (msg?: string[]) =>
+  msg?.[0] ? <p className="mt-1 text-xs text-red-400">{msg[0]}</p> : null;
+
 export const Route = createFileRoute("/_authenticated/admin/hse")({
   component: AdminHsePage,
 });
@@ -88,11 +104,13 @@ function formToPayload(f: FormState) {
 function AdminHsePage() {
   const [rows, setRows] = useState<HseRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<HseRow | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [saving, setSaving] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<HseRow | null>(null);
+  const [errors, setErrors] = useState<FieldErrors>({});
 
   const load = async () => {
     setLoading(true);
@@ -102,6 +120,7 @@ function AdminHsePage() {
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: false });
     if (error) toast.error("Failed to load", { description: error.message });
+    setLoadError(!!error);
     setRows((data as HseRow[]) ?? []);
     setLoading(false);
   };
@@ -113,19 +132,24 @@ function AdminHsePage() {
   const openCreate = () => {
     setEditing(null);
     setForm(emptyForm);
+    setErrors({});
     setDialogOpen(true);
   };
   const openEdit = (r: HseRow) => {
     setEditing(r);
     setForm(rowToForm(r));
+    setErrors({});
     setDialogOpen(true);
   };
 
   const handleSave = async () => {
-    if (!form.section.trim()) {
-      toast.error("Section is required");
+    const parsed = hseSchema.safeParse(form);
+    if (!parsed.success) {
+      setErrors(parsed.error.flatten().fieldErrors);
+      toast.error("Please fix the highlighted fields");
       return;
     }
+    setErrors({});
     setSaving(true);
     const payload = formToPayload(form);
     const { error } = editing
@@ -184,7 +208,31 @@ function AdminHsePage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {!loading && rows.length === 0 && (
+            {loading && (
+              <TableRow className="border-zinc-800 hover:bg-transparent">
+                <TableCell colSpan={6} className="text-center text-slate-500 py-10">
+                  <Loader2 className="h-4 w-4 animate-spin inline mr-2" />
+                  Loading HSE content…
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading && loadError && (
+              <TableRow className="border-zinc-800 hover:bg-transparent">
+                <TableCell colSpan={6} className="text-center text-slate-500 py-10">
+                  <p className="mb-3">Couldn't load HSE content.</p>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={load}
+                    className="border-zinc-700 text-slate-200 hover:bg-zinc-800"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5 mr-2" />
+                    Retry
+                  </Button>
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading && !loadError && rows.length === 0 && (
               <TableRow className="border-zinc-800 hover:bg-transparent">
                 <TableCell colSpan={6} className="text-center text-slate-500 py-10">
                   No HSE content yet. Click "New HSE Item" to add one.
@@ -198,13 +246,9 @@ function AdminHsePage() {
                     {r.section}
                   </span>
                 </TableCell>
-                <TableCell className="text-slate-300">
-                  {r.title ?? "—"}
-                </TableCell>
+                <TableCell className="text-slate-300">{r.title ?? "—"}</TableCell>
                 <TableCell className="text-slate-300 max-w-sm">
-                  <div className="text-xs text-slate-400 line-clamp-2">
-                    {r.body ?? "—"}
-                  </div>
+                  <div className="text-xs text-slate-400 line-clamp-2">{r.body ?? "—"}</div>
                 </TableCell>
                 <TableCell className="text-slate-300 text-right">{r.sort_order}</TableCell>
                 <TableCell>
@@ -226,6 +270,7 @@ function AdminHsePage() {
                       variant="outline"
                       className="border-zinc-700 text-slate-200 hover:bg-zinc-800"
                       onClick={() => openEdit(r)}
+                      aria-label={`Edit HSE entry ${r.title || r.section}`}
                     >
                       <Pencil className="h-3.5 w-3.5" />
                     </Button>
@@ -234,6 +279,7 @@ function AdminHsePage() {
                       variant="outline"
                       className="border-zinc-700 text-red-400 hover:bg-red-500/10 hover:text-red-300"
                       onClick={() => setDeleteTarget(r)}
+                      aria-label={`Delete HSE entry ${r.title || r.section}`}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
@@ -250,7 +296,9 @@ function AdminHsePage() {
           <DialogHeader>
             <DialogTitle>{editing ? "Edit HSE Content" : "New HSE Content"}</DialogTitle>
             <DialogDescription className="text-slate-400">
-              {editing ? "Update this HSE section." : "Add a new health, safety, and environment section."}
+              {editing
+                ? "Update this HSE section."
+                : "Add a new health, safety, and environment section."}
             </DialogDescription>
           </DialogHeader>
 
@@ -265,6 +313,7 @@ function AdminHsePage() {
                   onChange={(e) => setForm({ ...form, section: e.target.value })}
                   className="bg-zinc-950 border-zinc-700"
                 />
+                {fieldError(errors.section)}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="sort_order">Sort Order</Label>
@@ -275,6 +324,7 @@ function AdminHsePage() {
                   onChange={(e) => setForm({ ...form, sort_order: e.target.value })}
                   className="bg-zinc-950 border-zinc-700"
                 />
+                {fieldError(errors.sort_order)}
               </div>
             </div>
 
@@ -286,6 +336,7 @@ function AdminHsePage() {
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
                 className="bg-zinc-950 border-zinc-700"
               />
+              {fieldError(errors.title)}
             </div>
 
             <div className="grid gap-2">
@@ -297,6 +348,7 @@ function AdminHsePage() {
                 onChange={(e) => setForm({ ...form, body: e.target.value })}
                 className="bg-zinc-950 border-zinc-700"
               />
+              {fieldError(errors.body)}
             </div>
 
             <div className="flex items-center justify-between rounded-md border border-zinc-800 px-4 py-3">
@@ -341,7 +393,8 @@ function AdminHsePage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete HSE content?</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-400">
-              This will permanently delete the "{deleteTarget?.section}" section. This cannot be undone.
+              This will permanently delete the "{deleteTarget?.section}" section. This cannot be
+              undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

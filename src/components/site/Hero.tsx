@@ -12,6 +12,7 @@ const Hero = () => {
           src="https://images.unsplash.com/photo-1558054665-fbe00cd7d920?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDJ8MHwxfHNlYXJjaHwxfHxlbGVjdHJpY2FsJTIwY29udHJvbCUyMHBhbmVsc3xlbnwwfHx8fDE3NjcwMDk2Mjd8MA&ixlib=rb-4.1.0&q=85"
           alt="Industrial Control Room"
           className="w-full h-full object-cover"
+          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-slate-900/75"></div>
       </div>
@@ -20,17 +21,17 @@ const Hero = () => {
         <div className="max-w-3xl">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
             Engineering Excellence in{" "}
-            <span className="text-cyan-400">Electrical &amp; Instrumentation</span>{" "}
-            Solutions
+            <span className="text-cyan-400">Electrical &amp; Instrumentation</span> Solutions
           </h1>
           <p className="text-lg md:text-xl text-slate-200 mb-8 leading-relaxed">
-            Delivering integrated Electrical, Instrumentation & Automation solutions for industrial and clean-energy projects across India- from design and engineering to procurement, supply, execution, testing and commissioning.
+            Delivering End-to-End Electrical, Instrumentation & Automation Solutions for Efficient &
+            Sustainable Industrial Energy Systems.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
             {[
               "ISO Certified Quality Standards",
-              "25+ Years of Industry Experience",
+              "25+ Years of Team Experience",
               "Clean Energy Focus",
               "Turnkey Project Solutions",
             ].map((feature) => (
@@ -49,7 +50,10 @@ const Hero = () => {
               className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg group"
             >
               Explore Our Services
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+              <ArrowRight
+                className="ml-2 group-hover:translate-x-1 transition-transform"
+                size={20}
+              />
             </Button>
             <Button
               size="lg"

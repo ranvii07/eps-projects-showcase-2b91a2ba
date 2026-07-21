@@ -1,7 +1,6 @@
 export const SITE_URL = "https://www.epsprojects.in";
 export const SITE_NAME = "EPS Projects Pvt. Ltd.";
-export const SITE_LOGO =
-  "https://customer-assets.emergentagent.com/job_engineeringsps/artifacts/vuj1ba3q_edit1%20epsp%20%281%29.png";
+export const SITE_LOGO = `${SITE_URL}/eps-logo.png`;
 
 export type PageHeadOptions = {
   title?: string;
@@ -18,10 +17,15 @@ export const buildPageHead = ({ title, description, path = "" }: PageHeadOptions
     { property: "og:type", content: "website" },
     { property: "og:site_name", content: SITE_NAME },
     { property: "og:url", content: canonical },
+    { property: "og:image", content: SITE_LOGO },
+    { name: "twitter:card", content: "summary" },
+    { name: "twitter:title", content: fullTitle },
+    { name: "twitter:image", content: SITE_LOGO },
   ];
   if (description) {
     meta.push({ name: "description", content: description });
     meta.push({ property: "og:description", content: description });
+    meta.push({ name: "twitter:description", content: description });
   }
   return {
     meta,
