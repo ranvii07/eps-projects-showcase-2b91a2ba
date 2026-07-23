@@ -61,75 +61,175 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* ===========================================================================
+ * COLOR SYSTEM — light enterprise theme with scoped dark regions.
+ *
+ * HOW THIS WORKS (read before changing any colour)
+ * -----------------------------------------------
+ * The site's colours live in ~770 hardcoded `zinc-*` / `slate-*` utilities on
+ * section wrappers and cards. Tailwind v4 compiles every one of those to
+ * `var(--color-<name>)`, so the whole surface system is retuned here by
+ * redefining those variables instead of editing components.
+ *
+ * The same trick gives us mixed light/dark on one set of components: the
+ * `.dark` block further down REDECLARES these same variables. Any subtree
+ * carrying `class="dark"` therefore renders the dark palette while the rest
+ * of the page renders light — with identical class names. `.dark` is
+ * unlayered and `@theme` lands in `@layer theme`, so `.dark` always wins.
+ *
+ * Dark subtrees: Navbar, Hero, PageHeader (inner-page banner), Footer,
+ * the whole /admin CMS, and the 404 / error screens.
+ *
+ * NOTE ON SCALE DIRECTION — this is deliberate and will look wrong at a
+ * glance: in the light theme the `*-200 … *-600` steps are TEXT colours, so
+ * they run DARK, while `*-900 / *-950` are SURFACES, so they run LIGHT. Each
+ * token has one fixed role in this codebase (listed below); the numeric step
+ * no longer implies lightness. Check the role before reusing a token.
+ *
+ * Verified on the light surfaces (all >= WCAG AA):
+ * headings 18.1:1, body 10.5:1, muted 6.2:1, meta 5.3:1, cyan accent 5.4:1.
+ * =========================================================================== */
+@theme {
+  /* ---- Surfaces (light) ---- */
+  --color-zinc-950: oklch(0.9752 0.0034 247.86); /* #F5F7F9 page background */
+  --color-slate-900: oklch(0.948 0.0063 255.48); /* #EBEEF2 alternate section */
+  --color-zinc-900: oklch(1 0 0); /* #FFFFFF cards / panels */
+  --color-slate-950: oklch(0.2452 0.04 253); /* #122133 dark-only (navbar/hero) */
+
+  /* ---- Borders ---- */
+  --color-zinc-800: oklch(0.9168 0.0098 252.82); /* #DFE4EA hairline */
+  --color-slate-800: oklch(0.9168 0.0098 252.82);
+  --color-zinc-700: oklch(0.8489 0.0188 258.36); /* #C6CEDA stronger rule */
+  --color-slate-700: oklch(0.8489 0.0188 258.36);
+
+  /* ---- Text (dark on light) ---- */
+  --color-slate-200: oklch(0.309 0.0317 254.29); /* #253140 strong body */
+  --color-slate-300: oklch(0.3688 0.0303 248.66); /* #33414F body */
+  --color-slate-400: oklch(0.4923 0.0258 244.18); /* #55636F muted */
+  --color-slate-500: oklch(0.5274 0.0254 244.13); /* #5F6D79 meta */
+  --color-zinc-400: oklch(0.5044 0.0242 248.31);
+  --color-zinc-500: oklch(0.5274 0.0254 244.13);
+  --color-zinc-600: oklch(0.4441 0.0229 248.34);
+
+  /* ---- Accents, deepened for light surfaces ----
+   * The brand cyan stays cyan but moves down the ramp: the bright #22D3EE
+   * reads 1.7:1 on white. These are Tailwind's own cyan-700/800 steps. */
+  --color-cyan-400: oklch(0.52 0.105 223.128); /* accent / rules / small text */
+  --color-cyan-300: oklch(0.45 0.085 224.283); /* hover — darker = more emphasis */
+  --color-green-400: oklch(0.527 0.154 150.069);
+  --color-orange-400: oklch(0.555 0.163 48.998);
+}
+
+/* Semantic tokens for the shadcn primitives (Card, Input, Dialog, Select…),
+ * aligned to the same light palette so they never look bolted-on. */
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --background: oklch(0.9752 0.0034 247.86);
+  --foreground: oklch(0.2012 0.0218 251.84);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
+  --card-foreground: oklch(0.2012 0.0218 251.84);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --popover-foreground: oklch(0.2012 0.0218 251.84);
+  --primary: oklch(0.2012 0.0218 251.84);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.948 0.0063 255.48);
+  --secondary-foreground: oklch(0.2012 0.0218 251.84);
+  --muted: oklch(0.948 0.0063 255.48);
+  --muted-foreground: oklch(0.4923 0.0258 244.18);
+  --accent: oklch(0.948 0.0063 255.48);
+  --accent-foreground: oklch(0.2012 0.0218 251.84);
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.9168 0.0098 252.82);
+  --input: oklch(0.9168 0.0098 252.82);
+  --ring: oklch(0.52 0.105 223.128);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.2012 0.0218 251.84);
+  --sidebar-primary: oklch(0.52 0.105 223.128);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.948 0.0063 255.48);
+  --sidebar-accent-foreground: oklch(0.2012 0.0218 251.84);
+  --sidebar-border: oklch(0.9168 0.0098 252.82);
+  --sidebar-ring: oklch(0.52 0.105 223.128);
 }
 
+/* Dark regions — navbar, hero, inner-page banner, footer, /admin, error screens.
+ *
+ * This redeclares the SAME palette variables as the @theme block above, so any
+ * subtree with class="dark" renders the charcoal system using identical utility
+ * class names. Keep the two blocks in sync: every token defined in @theme that
+ * appears inside a dark subtree needs an entry here, or it will fall through to
+ * its light value and blow out the contrast.
+ *
+ * Surfaces: slate-950 #122133 navbar/hero · zinc-950 #2A3A4D page ·
+ * slate-900 #334457 alternate band / footer · zinc-900 #405165 cards.
+ */
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
+  /* ---- Surfaces ---- */
+  --color-slate-950: oklch(0.2452 0.04 253);
+  --color-zinc-950: oklch(0.3435 0.04 253);
+  --color-slate-900: oklch(0.3803 0.04 253);
+  --color-zinc-900: oklch(0.4287 0.04 253);
+
+  /* ---- Borders (translucent white reads correctly on every dark tier) ---- */
+  --color-zinc-800: oklch(1 0 0 / 8%);
+  --color-slate-800: oklch(1 0 0 / 8%);
+  --color-zinc-700: oklch(1 0 0 / 14%);
+  --color-slate-700: oklch(1 0 0 / 14%);
+
+  /* ---- Text (light on dark) ---- */
+  --color-slate-200: oklch(0.9842 0.0034 247.86);
+  --color-slate-300: oklch(0.9189 0.0132 251.56);
+  --color-slate-400: oklch(0.869 0.0198 252.89);
+  --color-slate-500: oklch(0.8539 0.0211 254.93);
+  --color-zinc-400: oklch(0.8449 0.0224 256.74);
+  --color-zinc-500: oklch(0.8539 0.0211 254.93);
+  --color-zinc-600: oklch(0.8286 0.023 254.41);
+
+  /* ---- Accents return to the bright brand cyan on dark ---- */
+  --color-cyan-400: oklch(0.789 0.154 211.53);
+  --color-cyan-300: oklch(0.865 0.127 207.078);
+  --color-green-400: oklch(0.792 0.209 151.711);
+  --color-orange-400: oklch(0.75 0.183 55.934);
+
+  /* ---- Semantic tokens for shadcn primitives ---- */
+  --background: oklch(0.3435 0.04 253);
+  --foreground: oklch(0.9842 0.0034 247.86);
+  --card: oklch(0.4287 0.04 253);
+  --card-foreground: oklch(0.9842 0.0034 247.86);
+  --popover: oklch(0.4287 0.04 253);
+  --popover-foreground: oklch(0.9842 0.0034 247.86);
   --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
+  --primary-foreground: oklch(0.3435 0.04 253);
+  --secondary: oklch(0.3803 0.04 253);
+  --secondary-foreground: oklch(0.9842 0.0034 247.86);
+  --muted: oklch(0.3803 0.04 253);
+  --muted-foreground: oklch(0.869 0.0198 252.89);
+  --accent: oklch(0.3803 0.04 253);
+  --accent-foreground: oklch(0.9842 0.0034 247.86);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.8539 0.0211 254.93);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
+  --sidebar: oklch(0.4287 0.04 253);
+  --sidebar-foreground: oklch(0.9842 0.0034 247.86);
   --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  --sidebar-primary-foreground: oklch(0.9842 0.0034 247.86);
+  --sidebar-accent: oklch(0.3803 0.04 253);
+  --sidebar-accent-foreground: oklch(0.9842 0.0034 247.86);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.8539 0.0211 254.93);
 }
 
 @layer base {

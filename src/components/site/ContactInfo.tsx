@@ -11,7 +11,7 @@ const ContactInfo = () => {
               <MapPin className="text-cyan-400" size={24} />
             </div>
             <div>
-              <h3 className="font-bold text-white mb-2">Office Address</h3>
+              <h3 className="font-bold text-foreground mb-2">Office Address</h3>
               <p className="text-slate-300 leading-relaxed">
                 EPS Projects Pvt. Ltd.
                 <br />
@@ -33,10 +33,10 @@ const ContactInfo = () => {
               <Phone className="text-green-400" size={24} />
             </div>
             <div>
-              <h3 className="font-bold text-white mb-2">Phone Numbers</h3>
+              <h3 className="font-bold text-foreground mb-2">Phone Numbers</h3>
               <div className="text-slate-300 space-y-3">
                 <div>
-                  <p className="font-medium text-white">Digvijay Tanwar, Director</p>
+                  <p className="font-medium text-foreground">Digvijay Tanwar, Director</p>
                   <a
                     href="tel:+919810731116"
                     className="hover:text-green-400 transition-colors block"
@@ -45,7 +45,7 @@ const ContactInfo = () => {
                   </a>
                 </div>
                 <div>
-                  <p className="font-medium text-white">Surender Chahal, Chief Operating Officer</p>
+                  <p className="font-medium text-foreground">Surender Chahal, Chief Operating Officer</p>
                   <a
                     href="tel:+919071970000"
                     className="hover:text-green-400 transition-colors block"
@@ -66,7 +66,7 @@ const ContactInfo = () => {
               <Mail className="text-orange-400" size={24} />
             </div>
             <div>
-              <h3 className="font-bold text-white mb-2">Email Addresses</h3>
+              <h3 className="font-bold text-foreground mb-2">Email Addresses</h3>
               <div className="text-slate-300 space-y-1">
                 <a
                   href="mailto:info@epsprojects.in"

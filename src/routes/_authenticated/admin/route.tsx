@@ -6,6 +6,7 @@ import {
   FolderKanban,
   Building2,
   Wrench,
+  Factory,
   HelpCircle,
   ShieldCheck,
   Award,
@@ -33,6 +34,7 @@ const navItems = [
   { title: "Projects", url: "/admin/projects", icon: FolderKanban },
   { title: "Clients", url: "/admin/clients", icon: Building2 },
   { title: "Services", url: "/admin/services", icon: Wrench },
+  { title: "Industries", url: "/admin/industries", icon: Factory },
   { title: "FAQs", url: "/admin/faq", icon: HelpCircle },
   { title: "HSE", url: "/admin/hse", icon: ShieldCheck },
   { title: "Credentials", url: "/admin/credentials", icon: Award },
@@ -81,7 +83,7 @@ function AdminLayout() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-zinc-950 text-white">
+      <div className="dark min-h-screen flex w-full bg-zinc-950 text-white">
         <Sidebar collapsible="icon">
           <SidebarHeader className="border-b border-sidebar-border px-4 py-3">
             <span className="font-bold tracking-wide">EPS CMS</span>

@@ -36,7 +36,7 @@ function SignedProjectImage({ path, alt }: { path: string; alt: string }) {
   if (failed)
     return (
       <div className="w-full h-full flex items-center justify-center bg-zinc-800">
-        <ImageIcon className="h-8 w-8 text-zinc-700" />
+        <ImageIcon className="h-8 w-8 text-zinc-500" />
       </div>
     );
   if (!url)
@@ -100,7 +100,7 @@ function ProjectsPage() {
               <div className="w-20 h-20 bg-cyan-400/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Building2 className="text-cyan-400" size={40} />
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
                 Project Showcase Coming Soon
               </h2>
               <p className="text-slate-300 text-lg leading-relaxed mb-8">
@@ -127,7 +127,7 @@ function ProjectsPage() {
               {projects.map((project) => (
                 <Card
                   key={project.id}
-                  className="group overflow-hidden bg-zinc-900 border-zinc-800 hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-300 hover:-translate-y-2"
+                  className="group overflow-hidden bg-zinc-900 border-zinc-800 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
                   data-testid={`project-card-${project.id}`}
                 >
                   {project.image_url && (
@@ -141,7 +141,7 @@ function ProjectsPage() {
                         {project.industry}
                       </span>
                     )}
-                    <h3 className="text-xl font-bold text-white mt-2 mb-3">{project.name}</h3>
+                    <h3 className="text-xl font-bold text-foreground mt-2 mb-3">{project.name}</h3>
                     {project.description && (
                       <p className="text-slate-300 leading-relaxed">{project.description}</p>
                     )}

@@ -38,7 +38,7 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-16">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Welcome to EPS Projects Pvt. Ltd.
             </h2>
             <div className="w-24 h-1 bg-cyan-400 mx-auto"></div>
@@ -80,7 +80,7 @@ const About = () => {
         </div>
 
         <div className="mb-16 bg-zinc-900 rounded-xl shadow-lg p-8 border border-zinc-800">
-          <h3 className="text-2xl font-bold text-white mb-6 text-center">
+          <h3 className="text-2xl font-bold text-foreground mb-6 text-center">
             Our Wide Scope of Services
           </h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -104,7 +104,7 @@ const About = () => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-zinc-900 to-black rounded-xl shadow-xl p-8 text-white border border-zinc-800">
+        <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl shadow-xl p-8 text-foreground border border-zinc-800">
           <h3 className="text-2xl font-bold mb-4">Our Expertise</h3>
           <p className="text-slate-300 leading-relaxed text-lg">
             EPS leads integration of E&amp;I solutions for India&apos;s{" "}
@@ -122,7 +122,7 @@ const About = () => {
                   <Target className="text-cyan-400" size={32} />
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-white mb-4 text-center">Our Mission</h3>
+              <h3 className="text-xl font-bold text-foreground mb-4 text-center">Our Mission</h3>
               <p className="text-slate-300 text-center leading-relaxed">
                 To constantly deliver high-quality E&amp;I services that satisfy the needs and
                 expectations of our customers — on time, within budget, and with zero compromise on
@@ -138,7 +138,7 @@ const About = () => {
                   <Eye className="text-green-400" size={32} />
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-white mb-4 text-center">Our Vision</h3>
+              <h3 className="text-xl font-bold text-foreground mb-4 text-center">Our Vision</h3>
               <p className="text-slate-300 text-center leading-relaxed">
                 To be focused, committed &amp; challenging — delivering excellence and scale in
                 Electrical, Instrumentation &amp; Automation services across India&apos;s industrial
@@ -154,7 +154,7 @@ const About = () => {
                   <Shield className="text-orange-400" size={32} />
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-white mb-4 text-center">
+              <h3 className="text-xl font-bold text-foreground mb-4 text-center">
                 Quality &amp; Safety
               </h3>
               <p className="text-slate-300 text-center leading-relaxed mb-4">
@@ -179,7 +179,7 @@ const About = () => {
                   {hseContent.map((item) => (
                     <div key={item.id}>
                       {item.title && (
-                        <h4 className="text-white font-semibold mb-2 text-center">{item.title}</h4>
+                        <h4 className="text-foreground font-semibold mb-2 text-center">{item.title}</h4>
                       )}
                       <p className="text-slate-300 text-center leading-relaxed">{item.body}</p>
                     </div>

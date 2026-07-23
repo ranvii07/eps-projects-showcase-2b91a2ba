@@ -6,10 +6,10 @@ type Props = {
 export const PageHeader = ({ title, subtitle }: Props) => {
   return (
     <section
-      className="relative bg-black pt-32 pb-16 border-b border-zinc-800"
+      className="dark relative bg-slate-950 pt-32 pb-16 border-b border-zinc-800"
       data-testid="page-header"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/60 to-black"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/60 to-zinc-950"></div>
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h1
           className="text-4xl sm:text-5xl font-bold text-white mb-4"

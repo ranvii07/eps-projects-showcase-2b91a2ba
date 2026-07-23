@@ -95,7 +95,7 @@ const LOCAL_BUSINESS_JSON_LD = {
 
 function NotFoundComponent() {
   return (
-    <div className="bg-zinc-950 min-h-screen flex items-center justify-center px-4">
+    <div className="dark bg-zinc-950 min-h-screen flex items-center justify-center px-4">
       {/* React 19 hoists these into <head>; gives the 404 its own metadata
           instead of inheriting the sitewide root title/description. */}
       <title>404 | EPS Projects</title>
@@ -129,7 +129,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <div className="bg-zinc-950 min-h-screen flex items-center justify-center px-4">
+    <div className="dark bg-zinc-950 min-h-screen flex items-center justify-center px-4">
       <div className="max-w-md text-center">
         <h1 className="text-2xl font-semibold text-white">This page didn't load</h1>
         <p className="mt-2 text-slate-300">
@@ -203,7 +203,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="bg-zinc-950 text-white">
+      <body className="bg-zinc-950 text-foreground">
         {children}
         <Scripts />
       </body>

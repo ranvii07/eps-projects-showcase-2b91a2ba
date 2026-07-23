@@ -6,7 +6,7 @@ const Hero = () => {
   const navigate = useNavigate();
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center pt-20">
+    <section id="home" className="dark relative min-h-screen flex items-center pt-20">
       <div className="absolute inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1558054665-fbe00cd7d920?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDJ8MHwxfHNlYXJjaHwxfHxlbGVjdHJpY2FsJTIwY29udHJvbCUyMHBhbmVsc3xlbnwwfHx8fDE3NjcwMDk2Mjd8MA&ixlib=rb-4.1.0&q=85"
@@ -14,7 +14,7 @@ const Hero = () => {
           className="w-full h-full object-cover"
           fetchPriority="high"
         />
-        <div className="absolute inset-0 bg-slate-900/75"></div>
+        <div className="absolute inset-0 bg-slate-950/60"></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
