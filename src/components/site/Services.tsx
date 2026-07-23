@@ -150,10 +150,10 @@ const Services = ({ variant = "home" }: { variant?: "home" | "detail" }) => {
   }, []);
 
   return (
-    <section id="services" className="py-20 bg-black">
+    <section id="services" className="py-20 bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Comprehensive Electrical &amp; Instrumentation Solutions
           </h2>
           <div className="w-24 h-1 bg-cyan-400 mx-auto mb-6"></div>
@@ -181,16 +181,16 @@ const Services = ({ variant = "home" }: { variant?: "home" | "detail" }) => {
               return (
                 <Card
                   key={service.id}
-                  className="group hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-300 border-t-4 border-cyan-400 hover:-translate-y-2 bg-zinc-900 border-zinc-800"
+                  className="group hover:shadow-2xl transition-all duration-300 border-t-4 border-cyan-400 hover:-translate-y-2 bg-zinc-900 border-zinc-800"
                 >
                   <CardHeader>
                     <div className="w-16 h-16 bg-cyan-400/20 rounded-lg flex items-center justify-center mb-4 group-hover:bg-cyan-400 transition-colors">
                       <Icon
-                        className="text-cyan-400 group-hover:text-black transition-colors"
+                        className="text-cyan-400 group-hover:text-white transition-colors"
                         size={32}
                       />
                     </div>
-                    <CardTitle className="text-xl font-bold text-white">{service.title}</CardTitle>
+                    <CardTitle className="text-xl font-bold text-foreground">{service.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ServiceDescription description={service.description} detail={detail} />
@@ -203,7 +203,7 @@ const Services = ({ variant = "home" }: { variant?: "home" | "detail" }) => {
 
         {detail && (
           <div className="mt-20">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 text-center">
+            <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4 text-center">
               Material Supply
             </h3>
             <div className="w-24 h-1 bg-cyan-400 mx-auto mb-10"></div>
@@ -211,7 +211,7 @@ const Services = ({ variant = "home" }: { variant?: "home" | "detail" }) => {
               {materialSupply.map((block) => (
                 <Card key={block.title} className="bg-zinc-900 border-zinc-800">
                   <CardHeader>
-                    <CardTitle className="text-xl font-bold text-white">{block.title}</CardTitle>
+                    <CardTitle className="text-xl font-bold text-foreground">{block.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2.5">
@@ -234,7 +234,7 @@ const Services = ({ variant = "home" }: { variant?: "home" | "detail" }) => {
 
         {detail ? (
           <div className="mt-20 text-center">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Industries We Serve</h3>
+            <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Industries We Serve</h3>
             <div className="w-24 h-1 bg-cyan-400 mx-auto mb-6"></div>
             <div className="flex flex-wrap justify-center gap-3 mb-8">
               {sectors.map((sector) => (
@@ -257,7 +257,7 @@ const Services = ({ variant = "home" }: { variant?: "home" | "detail" }) => {
           </div>
         ) : (
           <div className="mt-20">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-8 text-center">
+            <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-8 text-center">
               Industries We Serve
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -273,7 +273,7 @@ const Services = ({ variant = "home" }: { variant?: "home" | "detail" }) => {
                       loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent flex items-end">
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 to-transparent flex items-end">
                       <p className="text-white font-bold text-lg p-4">{industry.name}</p>
                     </div>
                   </div>

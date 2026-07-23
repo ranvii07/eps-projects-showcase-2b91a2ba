@@ -26,7 +26,7 @@ function SignedProjectImage({ path, alt }: { path: string; alt: string }) {
   if (failed)
     return (
       <div className="w-full h-full flex items-center justify-center bg-zinc-800">
-        <ImageIcon className="h-8 w-8 text-zinc-700" />
+        <ImageIcon className="h-8 w-8 text-zinc-500" />
       </div>
     );
   if (!url)
@@ -71,10 +71,10 @@ const FeaturedProjects = () => {
   if (!projects || projects.length === 0) return null;
 
   return (
-    <section className="py-20 bg-black" data-testid="featured-projects">
+    <section className="py-20 bg-slate-900" data-testid="featured-projects">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Featured Projects</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Featured Projects</h2>
           <div className="w-24 h-1 bg-cyan-400 mx-auto mb-6"></div>
         </div>
 
@@ -85,7 +85,7 @@ const FeaturedProjects = () => {
           {projects.map((project) => (
             <Card
               key={project.id}
-              className="group overflow-hidden bg-zinc-900 border-zinc-800 hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-300 hover:-translate-y-2"
+              className="group overflow-hidden bg-zinc-900 border-zinc-800 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
               data-testid={`featured-project-card-${project.id}`}
             >
               {project.image_url && (
@@ -99,7 +99,7 @@ const FeaturedProjects = () => {
                     {project.industry}
                   </span>
                 )}
-                <h3 className="text-xl font-bold text-white mt-2 mb-3">{project.name}</h3>
+                <h3 className="text-xl font-bold text-foreground mt-2 mb-3">{project.name}</h3>
                 {project.description && (
                   <p className="text-slate-300 leading-relaxed">{project.description}</p>
                 )}

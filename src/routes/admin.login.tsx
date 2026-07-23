@@ -53,7 +53,7 @@ function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4">
+    <div className="dark min-h-screen bg-zinc-950 flex items-center justify-center px-4">
       <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
         <CardHeader className="text-center">
           <img

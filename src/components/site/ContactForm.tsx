@@ -124,7 +124,7 @@ const ContactForm = () => {
 
   return (
     <div className="lg:col-span-2">
-      <Card className="bg-zinc-900 border-zinc-800 text-white shadow-xl">
+      <Card className="bg-zinc-900 border-zinc-800 text-foreground shadow-xl">
         <CardContent className="pt-8">
           <form onSubmit={handleSubmit} className="space-y-6" data-testid="contact-form">
             <div className="grid md:grid-cols-2 gap-6">

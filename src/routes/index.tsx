@@ -35,10 +35,10 @@ function HomePage() {
       <section className="bg-blue-600 py-16" data-testid="home-cta">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
               Have a project in mind?
             </h2>
-            <p className="text-blue-100 text-lg">
+            <p className="text-blue-50 text-lg">
               Let's discuss how EPS Projects can deliver it end-to-end.
             </p>
           </div>

@@ -49,7 +49,7 @@ function PrivacyPage() {
           <div className="space-y-10">
             {sections.map((section, index) => (
               <div key={section.heading} data-testid={`privacy-section-${index}`}>
-                <h2 className="text-2xl font-bold text-white mb-3">{section.heading}</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-3">{section.heading}</h2>
                 <p className="text-slate-300 leading-relaxed text-lg">{section.body}</p>
               </div>
             ))}

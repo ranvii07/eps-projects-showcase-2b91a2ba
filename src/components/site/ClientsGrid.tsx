@@ -21,7 +21,7 @@ function ClientCard({ client, index }: { client: ClientRow; index: number }) {
   return (
     <div
       data-testid={`client-item-${index}`}
-      className="flex h-full flex-col items-center justify-start rounded-lg border border-zinc-800 bg-zinc-900 p-6 text-center transition-colors duration-300 hover:border-cyan-400/50 hover:shadow-lg hover:shadow-cyan-500/10"
+      className="flex h-full flex-col items-center justify-start rounded-lg border border-zinc-800 bg-zinc-900 p-6 text-center transition-colors duration-300 hover:border-cyan-400/50 hover:shadow-lg"
     >
       {/* Fixed-height logo zone: keeps every card uniform and centers the logo,
           which scales proportionally (object-contain) without distortion. */}
@@ -37,7 +37,7 @@ function ClientCard({ client, index }: { client: ClientRow; index: number }) {
             <Loader2 className="h-4 w-4 animate-spin text-zinc-500" />
           )
         ) : (
-          <ImageIcon className="h-8 w-8 text-zinc-700" />
+          <ImageIcon className="h-8 w-8 text-zinc-500" />
         )}
       </div>
       <p className="font-medium text-slate-200">{client.name}</p>

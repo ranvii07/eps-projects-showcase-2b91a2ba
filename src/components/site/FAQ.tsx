@@ -43,7 +43,7 @@ const FAQ = () => {
     <section className="py-20 bg-zinc-950">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Frequently Asked Questions
           </h2>
           <div className="w-24 h-1 bg-cyan-400 mx-auto mb-6"></div>
@@ -70,7 +70,7 @@ const FAQ = () => {
                 value={`item-${index}`}
                 className="bg-zinc-900 rounded-lg px-6 border border-zinc-800"
               >
-                <AccordionTrigger className="text-left font-semibold text-white hover:text-cyan-400 py-5">
+                <AccordionTrigger className="text-left font-semibold text-foreground hover:text-cyan-400 py-5">
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="text-slate-300 leading-relaxed pb-5">
