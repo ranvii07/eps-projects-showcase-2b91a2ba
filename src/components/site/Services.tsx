@@ -190,7 +190,9 @@ const Services = ({ variant = "home" }: { variant?: "home" | "detail" }) => {
                         size={32}
                       />
                     </div>
-                    <CardTitle className="text-xl font-bold text-foreground">{service.title}</CardTitle>
+                    <CardTitle className="text-xl font-bold text-foreground">
+                      {service.title}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ServiceDescription description={service.description} detail={detail} />
@@ -211,7 +213,9 @@ const Services = ({ variant = "home" }: { variant?: "home" | "detail" }) => {
               {materialSupply.map((block) => (
                 <Card key={block.title} className="bg-zinc-900 border-zinc-800">
                   <CardHeader>
-                    <CardTitle className="text-xl font-bold text-foreground">{block.title}</CardTitle>
+                    <CardTitle className="text-xl font-bold text-foreground">
+                      {block.title}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2.5">
@@ -234,7 +238,9 @@ const Services = ({ variant = "home" }: { variant?: "home" | "detail" }) => {
 
         {detail ? (
           <div className="mt-20 text-center">
-            <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Industries We Serve</h3>
+            <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              Industries We Serve
+            </h3>
             <div className="w-24 h-1 bg-cyan-400 mx-auto mb-6"></div>
             <div className="flex flex-wrap justify-center gap-3 mb-8">
               {sectors.map((sector) => (

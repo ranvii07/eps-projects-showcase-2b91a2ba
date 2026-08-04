@@ -45,7 +45,9 @@ const ContactInfo = () => {
                   </a>
                 </div>
                 <div>
-                  <p className="font-medium text-foreground">Surender Chahal, Chief Operating Officer</p>
+                  <p className="font-medium text-foreground">
+                    Surender Chahal, Chief Operating Officer
+                  </p>
                   <a
                     href="tel:+919071970000"
                     className="hover:text-green-400 transition-colors block"

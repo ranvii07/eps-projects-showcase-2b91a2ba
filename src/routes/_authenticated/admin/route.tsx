@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard,
   FolderKanban,
+  Images,
   Building2,
   Wrench,
   Factory,
@@ -11,6 +12,7 @@ import {
   ShieldCheck,
   Award,
   Mail,
+  Settings,
   LogOut,
 } from "lucide-react";
 import {
@@ -32,6 +34,7 @@ import { supabase } from "@/integrations/supabase/client";
 const navItems = [
   { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
   { title: "Projects", url: "/admin/projects", icon: FolderKanban },
+  { title: "Project Gallery", url: "/admin/project-gallery", icon: Images },
   { title: "Clients", url: "/admin/clients", icon: Building2 },
   { title: "Services", url: "/admin/services", icon: Wrench },
   { title: "Industries", url: "/admin/industries", icon: Factory },
@@ -39,7 +42,7 @@ const navItems = [
   { title: "HSE", url: "/admin/hse", icon: ShieldCheck },
   { title: "Credentials", url: "/admin/credentials", icon: Award },
   { title: "Contact Management", url: "/admin/contact-management", icon: Mail },
-  // Settings (/admin/settings) intentionally omitted until T5.3 builds the route.
+  { title: "Settings", url: "/admin/settings", icon: Settings },
 ] as const;
 
 export const Route = createFileRoute("/_authenticated/admin")({

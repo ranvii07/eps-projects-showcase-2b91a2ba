@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { SITE_SETTING_KEYS, useSiteSetting } from "@/lib/site-settings";
 
 type CredentialRow = { id: string; kind: string; label: string | null; value: string | null };
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [credentials, setCredentials] = useState<CredentialRow[]>([]);
+  // Same CMS toggle the navbar uses: while the gallery is off it must not be
+  // linked from anywhere public, footer included.
+  const { enabled: galleryEnabled } = useSiteSetting(SITE_SETTING_KEYS.projectGallery);
 
   useEffect(() => {
     let active = true;
@@ -26,16 +30,21 @@ const Footer = () => {
     };
   }, []);
 
-  const quickLinks = [
-    { name: "Home", to: "/" },
-    { name: "About Us", to: "/about" },
-    { name: "Services", to: "/services" },
-    { name: "Industries", to: "/industries" },
-    { name: "Why Choose Us", to: "/why-choose-us" },
-    { name: "Projects", to: "/projects" },
-    { name: "Clients", to: "/clients" },
-    { name: "Contact", to: "/contact" },
-  ] as const;
+  // Filtered rather than conditionally spread so the entries keep their literal
+  // `to` types, which is what <Link to> type-checks against.
+  const quickLinks = (
+    [
+      { name: "Home", to: "/" },
+      { name: "About Us", to: "/about" },
+      { name: "Services", to: "/services" },
+      { name: "Industries", to: "/industries" },
+      { name: "Why Choose Us", to: "/why-choose-us" },
+      { name: "Projects", to: "/projects" },
+      { name: "Project Gallery", to: "/projects/gallery" },
+      { name: "Clients", to: "/clients" },
+      { name: "Contact", to: "/contact" },
+    ] as const
+  ).filter((link) => galleryEnabled || link.to !== "/projects/gallery");
 
   return (
     <footer className="dark bg-slate-950 text-white">
@@ -53,6 +62,19 @@ const Footer = () => {
               Leading provider of Electrical &amp; Instrumentation engineering solutions, backed by
               a leadership team with over 25 years of industry experience.
             </p>
+
+            {/* ISO 9001:2015 trust badge — a transparent SVG printed directly
+             * onto the footer: no plate, border, shadow or padding, so it reads
+             * as an integrated certification mark rather than a pasted sticker.
+             * The mark keeps its own blue; the white globe/ISO/9001 knockouts
+             * are real white fills (not background holes), so they stay white on
+             * the dark footer. my-8 gives generous air above and below. */}
+            <img
+              src="/iso-9001-2015.svg"
+              alt="ISO 9001:2015 certified company"
+              className="my-8 w-20"
+              loading="lazy"
+            />
           </div>
 
           <div>

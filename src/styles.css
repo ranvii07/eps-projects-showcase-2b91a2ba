@@ -86,76 +86,179 @@
  * token has one fixed role in this codebase (listed below); the numeric step
  * no longer implies lightness. Check the role before reusing a token.
  *
- * Verified on the light surfaces (all >= WCAG AA):
- * headings 18.1:1, body 10.5:1, muted 6.2:1, meta 5.3:1, cyan accent 5.4:1.
+ * Verified on the blue-green canvas #ECF8F8 (all >= WCAG AA):
+ * headings 16.3:1, strong body 13.6:1, body 10.8:1, muted 6.5:1, meta 5.5:1,
+ * cyan accent 5.4:1, green 5.0:1, orange 5.0:1. Card surfaces read ~3% higher.
  * =========================================================================== */
 @theme {
-  /* ---- Surfaces (light) ---- */
-  --color-zinc-950: oklch(0.9752 0.0034 247.86); /* #F5F7F9 page background */
-  --color-slate-900: oklch(0.948 0.0063 255.48); /* #EBEEF2 alternate section */
-  --color-zinc-900: oklch(1 0 0); /* #FFFFFF cards / panels */
-  --color-slate-950: oklch(0.2452 0.04 253); /* #122133 dark-only (navbar/hero) */
+  /* ---- Surfaces (light) — ONE hue, 197°, for every surface in the system.
+   *
+   * Only lightness moves between tiers, and chroma RISES as a surface
+   * recedes: a card is the canvas lifted into more light, not a different
+   * material laid on top. Breaking either rule (drifting the hue, or
+   * desaturating the card toward white) is what makes the ladder stop
+   * blending — a card at a bluer hue or a lower chroma than its canvas
+   * reads as a white panel dropped on a tinted page.
+   *
+   * The canvas -> card step is deliberately tiny: 0.85 L-points. The lift is
+   * carried by the diffused shadows below, not by the colour. Do not widen
+   * it to "make cards clearer" — deepen the shadow instead.
+   *
+   * `slate-900` is intentionally IDENTICAL to the canvas. It used to be an
+   * alternate section band (Services, Featured Projects); the site must read
+   * as one continuous surface, so those sections now differ from their
+   * neighbours only by spacing and content. ---- */
+  --color-zinc-950: oklch(0.971 0.0128 197); /* #ECF8F8 canvas (page + every section) */
+  --color-slate-900: oklch(0.971 0.0128 197); /* #ECF8F8 — collapsed into the canvas */
+  /* Cards are GLASS, not paint: the same #F1FBFB, held at 85% so the ambient
+   * wash below shows through. A card near the light source therefore sits a
+   * hair warmer than one in the corner, which is what stops the canvas -> card
+   * step from reading as a hard edge. Compositing costs about 1/255 of a
+   * channel — the tier is unchanged to the eye.
+   *
+   * No `backdrop-filter` here, deliberately: blurring a backdrop that is
+   * already a smooth gradient returns the same smooth gradient, so it would
+   * buy nothing visually while costing a compositing layer on every card. The
+   * frost comes from the translucency plus the inset top highlight below. */
+  --color-zinc-900: oklch(0.9795 0.0105 197 / 0.85); /* #F1FBFB cards, +0.85 L */
+  --color-slate-950: oklch(0.2452 0.04 253); /* #122133 dark-only anchor (footer) */
 
-  /* ---- Borders ---- */
-  --color-zinc-800: oklch(0.9168 0.0098 252.82); /* #DFE4EA hairline */
-  --color-slate-800: oklch(0.9168 0.0098 252.82);
-  --color-zinc-700: oklch(0.8489 0.0188 258.36); /* #C6CEDA stronger rule */
-  --color-slate-700: oklch(0.8489 0.0188 258.36);
+  /* ---- Borders — same hue, chroma keeps climbing as lightness drops ---- */
+  --color-zinc-800: oklch(0.918 0.02 197); /* #D5E8E8 hairline / chip surface */
+  --color-slate-800: oklch(0.918 0.02 197);
+  --color-zinc-700: oklch(0.862 0.0248 197); /* #C0D7D7 stronger rule */
+  --color-slate-700: oklch(0.862 0.0248 197);
 
-  /* ---- Text (dark on light) ---- */
-  --color-slate-200: oklch(0.309 0.0317 254.29); /* #253140 strong body */
-  --color-slate-300: oklch(0.3688 0.0303 248.66); /* #33414F body */
-  --color-slate-400: oklch(0.4923 0.0258 244.18); /* #55636F muted */
-  --color-slate-500: oklch(0.5274 0.0254 244.13); /* #5F6D79 meta */
-  --color-zinc-400: oklch(0.5044 0.0242 248.31);
-  --color-zinc-500: oklch(0.5274 0.0254 244.13);
-  --color-zinc-600: oklch(0.4441 0.0229 248.34);
+  /* ---- Text (dark on light) — hue 215, close enough to the 197° surfaces to
+   * belong to them, far enough to read as cool ink rather than tinted. Never
+   * pure black. ---- */
+  --color-slate-200: oklch(0.2757 0.0262 215); /* #182B30 strong body */
+  --color-slate-300: oklch(0.3387 0.0273 215); /* #273B40 body */
+  --color-slate-400: oklch(0.4575 0.0276 215); /* #465C61 muted */
+  --color-slate-500: oklch(0.4991 0.027 215); /* #52676D meta */
+  --color-zinc-400: oklch(0.4575 0.0276 215);
+  --color-zinc-500: oklch(0.4991 0.027 215);
+  --color-zinc-600: oklch(0.4231 0.0275 215);
 
   /* ---- Accents, deepened for light surfaces ----
    * The brand cyan stays cyan but moves down the ramp: the bright #22D3EE
-   * reads 1.7:1 on white. These are Tailwind's own cyan-700/800 steps. */
-  --color-cyan-400: oklch(0.52 0.105 223.128); /* accent / rules / small text */
-  --color-cyan-300: oklch(0.45 0.085 224.283); /* hover — darker = more emphasis */
-  --color-green-400: oklch(0.527 0.154 150.069);
-  --color-orange-400: oklch(0.555 0.163 48.998);
+   * reads 1.7:1 on white. Green/orange are highlight-only — icons, rules,
+   * status — never large filled areas. */
+  --color-cyan-400: oklch(0.49 0.11 220); /* #006D8B accent / rules / small text */
+  --color-cyan-300: oklch(0.43 0.09 222); /* #005A73 hover — darker = more emphasis */
+  --color-green-400: oklch(0.505 0.15 150); /* #007B31 success / feature icons */
+  --color-orange-400: oklch(0.535 0.16 49); /* #B34800 */
+
+  /* ---- Elevation — this is where the depth actually comes from.
+   *
+   * Because the canvas -> card colour step is only 0.85 L-points, the shadows
+   * carry the hierarchy. Each is a two-part composite: a tight contact shadow
+   * that anchors the edge, plus a wide, very low-opacity diffusion that reads
+   * as ambient occlusion rather than as a drop shadow. The ink is a desatur-
+   * ated blue-green (hue 212) so it tints INTO the canvas instead of greying
+   * it — black-inked shadows are what make a tinted page look dirty. ---- */
+  /* Small UI (inputs, chips, popovers) — two layers, no highlight. */
+  --shadow-2xs: 0 1px 2px 0 oklch(0.36 0.04 212 / 0.06);
+  --shadow-xs: 0 1px 3px 0 oklch(0.36 0.04 212 / 0.07);
+  --shadow-sm:
+    0 2px 5px -1px oklch(0.36 0.04 212 / 0.07), 0 1px 2px -1px oklch(0.36 0.04 212 / 0.05);
+  --shadow-md:
+    0 4px 10px -3px oklch(0.36 0.04 212 / 0.08), 0 10px 20px -10px oklch(0.36 0.04 212 / 0.1);
+
+  /* Cards — four layers, and the order is the whole trick:
+   *   1. inset top highlight — a 1px lit edge where the glass catches the
+   *      light from above. This does more for the floating effect than any
+   *      amount of drop shadow, and it is why the card can stay translucent.
+   *   2. contact — 2px, barely there, defines the edge against the canvas.
+   *   3. mid — the shadow you actually register.
+   *   4. ambient — very wide, very low alpha, offset far. Reads as occlusion
+   *      of the ambient wash rather than as a UI box shadow.
+   * Every step a card can hold (rest, hover:shadow-2xl, the xl variants used
+   * on panels) carries the highlight, so it never blinks off mid-transition. */
+  --shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.65), 0 1px 2px -1px oklch(0.36 0.04 212 / 0.05),
+    0 8px 18px -8px oklch(0.36 0.04 212 / 0.07), 0 28px 48px -24px oklch(0.36 0.04 212 / 0.12);
+  --shadow-lg:
+    inset 0 1px 0 oklch(1 0 0 / 0.6), 0 2px 4px -2px oklch(0.36 0.04 212 / 0.06),
+    0 12px 26px -10px oklch(0.36 0.04 212 / 0.08), 0 40px 64px -32px oklch(0.36 0.04 212 / 0.14);
+  --shadow-xl:
+    inset 0 1px 0 oklch(1 0 0 / 0.6), 0 2px 6px -2px oklch(0.36 0.04 212 / 0.07),
+    0 18px 36px -14px oklch(0.36 0.04 212 / 0.09), 0 56px 88px -40px oklch(0.36 0.04 212 / 0.16);
+  --shadow-2xl:
+    inset 0 1px 0 oklch(1 0 0 / 0.7), 0 3px 8px -3px oklch(0.36 0.04 212 / 0.08),
+    0 24px 48px -18px oklch(0.36 0.04 212 / 0.11), 0 72px 112px -48px oklch(0.36 0.04 212 / 0.18);
 }
 
 /* Semantic tokens for the shadcn primitives (Card, Input, Dialog, Select…),
  * aligned to the same light palette so they never look bolted-on. */
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.9752 0.0034 247.86);
-  --foreground: oklch(0.2012 0.0218 251.84);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2012 0.0218 251.84);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2012 0.0218 251.84);
-  --primary: oklch(0.2012 0.0218 251.84);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.948 0.0063 255.48);
-  --secondary-foreground: oklch(0.2012 0.0218 251.84);
-  --muted: oklch(0.948 0.0063 255.48);
-  --muted-foreground: oklch(0.4923 0.0258 244.18);
-  --accent: oklch(0.948 0.0063 255.48);
-  --accent-foreground: oklch(0.2012 0.0218 251.84);
+  --background: oklch(0.971 0.0128 197);
+  --foreground: oklch(0.21 0.025 215);
+  --card: oklch(0.9795 0.0105 197);
+  --card-foreground: oklch(0.21 0.025 215);
+  --popover: oklch(0.9795 0.0105 197);
+  --popover-foreground: oklch(0.21 0.025 215);
+  --primary: oklch(0.21 0.025 215);
+  --primary-foreground: oklch(0.9795 0.0105 197);
+  /* Sunken tier — #E7F5F5, one step BELOW the canvas. Used only by the shadcn
+   * primitives (input wells, muted chips, table stripes), never by a section
+   * wrapper, so it can't reintroduce banding. */
+  --secondary: oklch(0.96 0.0148 197);
+  --secondary-foreground: oklch(0.21 0.025 215);
+  --muted: oklch(0.96 0.0148 197);
+  --muted-foreground: oklch(0.4575 0.0276 215);
+  --accent: oklch(0.96 0.0148 197);
+  --accent-foreground: oklch(0.21 0.025 215);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.9168 0.0098 252.82);
-  --input: oklch(0.9168 0.0098 252.82);
-  --ring: oklch(0.52 0.105 223.128);
+  --border: oklch(0.918 0.02 197);
+  --input: oklch(0.918 0.02 197);
+  --ring: oklch(0.49 0.11 220);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.2012 0.0218 251.84);
-  --sidebar-primary: oklch(0.52 0.105 223.128);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.948 0.0063 255.48);
-  --sidebar-accent-foreground: oklch(0.2012 0.0218 251.84);
-  --sidebar-border: oklch(0.9168 0.0098 252.82);
-  --sidebar-ring: oklch(0.52 0.105 223.128);
+  --sidebar: oklch(0.9795 0.0105 197);
+  --sidebar-foreground: oklch(0.21 0.025 215);
+  --sidebar-primary: oklch(0.49 0.11 220);
+  --sidebar-primary-foreground: oklch(0.9795 0.0105 197);
+  --sidebar-accent: oklch(0.96 0.0148 197);
+  --sidebar-accent-foreground: oklch(0.21 0.025 215);
+  --sidebar-border: oklch(0.918 0.02 197);
+  --sidebar-ring: oklch(0.49 0.11 220);
+
+  /* Atmospheric canvas — ambient light, not a gradient.
+   *
+   * Both stops sit on the canvas hue (197°) and swing only 1.24 L-points
+   * end to end: #EFFAFA where the light falls, #E9F7F7 where it doesn't.
+   * That is roughly half the swing of the first pass, which drifted 25° of
+   * hue as well as lightness and consequently read as a stain in the corner
+   * rather than as illumination.
+   *
+   * Applied with `background-attachment: fixed` below, so every section
+   * shares one viewport-anchored wash instead of restarting its own.
+   * Zero-alpha stops (not `transparent`) keep the fade from greying out. */
+  /* Two very large radials only. The earlier third layer was a glow pinned to
+   * the bottom of the viewport — with `fixed` attachment that sits still while
+   * content scrolls past it, which is exactly the kind of feature the eye
+   * catches and names as "a gradient". What's left is one light source above
+   * left and one cool falloff opposite, both wide enough (150%/130%) that the
+   * change per 100px is far below the threshold of notice. */
+  --canvas-light: oklch(0.9772 0.0114 197);
+  --canvas-shade: oklch(0.9648 0.0146 197);
+  --canvas-blend:
+    radial-gradient(150% 115% at 0% -25%, var(--canvas-light) 0%, oklch(0.9772 0.0114 197 / 0) 70%),
+    radial-gradient(130% 100% at 105% 15%, var(--canvas-shade) 0%, oklch(0.9648 0.0146 197 / 0) 68%);
+
+  /* Dither. A 1.24 L-point gradient spread across a 1400px viewport steps
+   * through fewer than three 8-bit values, which is where banding lives — the
+   * page would show two faint arcs on a cheap panel. This is a fractal-noise
+   * tile at 3% that breaks the quantisation up. It is not a texture: at this
+   * opacity it is invisible as grain and only shows up as the absence of
+   * banding. */
+  --canvas-dither: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
 /* Dark regions — navbar, hero, inner-page banner, footer, /admin, error screens.
@@ -170,11 +273,12 @@
  * slate-900 #334457 alternate band / footer · zinc-900 #405165 cards.
  */
 .dark {
-  /* ---- Surfaces ---- */
+  /* ---- Surfaces (hue nudged 253 -> 238, toward the navbar's blue-teal;
+   * lightness steps are unchanged) ---- */
   --color-slate-950: oklch(0.2452 0.04 253);
-  --color-zinc-950: oklch(0.3435 0.04 253);
-  --color-slate-900: oklch(0.3803 0.04 253);
-  --color-zinc-900: oklch(0.4287 0.04 253);
+  --color-zinc-950: oklch(0.3435 0.04 238);
+  --color-slate-900: oklch(0.3803 0.04 238);
+  --color-zinc-900: oklch(0.4287 0.04 238);
 
   /* ---- Borders (translucent white reads correctly on every dark tier) ---- */
   --color-zinc-800: oklch(1 0 0 / 8%);
@@ -198,19 +302,19 @@
   --color-orange-400: oklch(0.75 0.183 55.934);
 
   /* ---- Semantic tokens for shadcn primitives ---- */
-  --background: oklch(0.3435 0.04 253);
+  --background: oklch(0.3435 0.04 238);
   --foreground: oklch(0.9842 0.0034 247.86);
-  --card: oklch(0.4287 0.04 253);
+  --card: oklch(0.4287 0.04 238);
   --card-foreground: oklch(0.9842 0.0034 247.86);
-  --popover: oklch(0.4287 0.04 253);
+  --popover: oklch(0.4287 0.04 238);
   --popover-foreground: oklch(0.9842 0.0034 247.86);
   --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.3435 0.04 253);
-  --secondary: oklch(0.3803 0.04 253);
+  --primary-foreground: oklch(0.3435 0.04 238);
+  --secondary: oklch(0.3803 0.04 238);
   --secondary-foreground: oklch(0.9842 0.0034 247.86);
-  --muted: oklch(0.3803 0.04 253);
+  --muted: oklch(0.3803 0.04 238);
   --muted-foreground: oklch(0.869 0.0198 252.89);
-  --accent: oklch(0.3803 0.04 253);
+  --accent: oklch(0.3803 0.04 238);
   --accent-foreground: oklch(0.9842 0.0034 247.86);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.984 0.003 247.858);
@@ -222,11 +326,11 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.4287 0.04 253);
+  --sidebar: oklch(0.4287 0.04 238);
   --sidebar-foreground: oklch(0.9842 0.0034 247.86);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.9842 0.0034 247.86);
-  --sidebar-accent: oklch(0.3803 0.04 253);
+  --sidebar-accent: oklch(0.3803 0.04 238);
   --sidebar-accent-foreground: oklch(0.9842 0.0034 247.86);
   --sidebar-border: oklch(1 0 0 / 8%);
   --sidebar-ring: oklch(0.8539 0.0211 254.93);
@@ -241,4 +345,117 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
+}
+
+/* ---------------------------------------------------------------------------
+ * ATMOSPHERE — unlayered so it lands on top of Tailwind's utility layer.
+ *
+ * The section wrappers paint their own opaque `bg-zinc-950` / `bg-slate-900`,
+ * which would otherwise hide the body wash. These rules paint the SAME wash on
+ * those surfaces; `background-attachment: fixed` anchors it to the viewport so
+ * the sections line up into one continuous gradient while scrolling. Only
+ * `background-image` is set, so each surface keeps its own base colour.
+ *
+ * Dark subtrees (navbar, hero, page header, footer, /admin) are excluded — the
+ * wash is a light-canvas effect only.
+ * ------------------------------------------------------------------------- */
+body,
+.bg-zinc-950:not(.dark):not(.dark *),
+.bg-slate-900:not(.dark):not(.dark *) {
+  background-image: var(--canvas-dither), var(--canvas-blend);
+  background-attachment: fixed;
+  background-repeat: repeat, no-repeat, no-repeat;
+  background-size:
+    160px 160px,
+    auto,
+    auto;
+}
+
+/* ---------------------------------------------------------------------------
+ * NAVBAR — deep blue cut with muted teal.
+ *
+ * LIGHTNESS BUDGET (the thing to preserve if you touch this): the footer is
+ * the anchor at L 0.245. The bar runs L 0.370 -> 0.315, so it sits 7 to 12.5
+ * L-points ABOVE the footer — clearly the same family, clearly not as dark.
+ * The previous values bottomed out at L 0.268, only 2.3 points off the
+ * footer, which is why the two read as the same slab.
+ *
+ * Top edge is lit and teal-leaning, bottom edge deeper and bluer, so the bar
+ * has its own internal light rather than being a flat fill. The bottom
+ * hairline is an inset shadow, not a border, so the 80px bar height and every
+ * sticky offset are untouched.
+ *
+ * White nav text reads 10.3:1 at the lit top edge, 12.8:1 at the bottom.
+ * ------------------------------------------------------------------------- */
+.nav-surface,
+.nav-surface-solid {
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.07),
+    inset 0 -1px 0 oklch(1 0 0 / 0.12);
+}
+
+.nav-surface-solid {
+  background-image: linear-gradient(180deg, oklch(0.37 0.04 216) 0%, oklch(0.315 0.045 230) 100%);
+}
+
+/* Translucent twin for the un-scrolled, backdrop-blurred state. Blur is worth
+ * paying for here — unlike on the cards, this backdrop is real content. */
+.nav-surface {
+  background-image: linear-gradient(
+    180deg,
+    oklch(0.37 0.04 216 / 0.88) 0%,
+    oklch(0.315 0.045 230 / 0.92) 100%
+  );
+}
+
+/* Scrolled: the bar has left the hero and now overlaps the light canvas, so it
+ * needs to cast rather than just sit. Wide ambient, low alpha, same ink. */
+.nav-surface-solid.shadow-lg {
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.07),
+    inset 0 -1px 0 oklch(1 0 0 / 0.12),
+    0 2px 6px -2px oklch(0.36 0.04 212 / 0.1),
+    0 16px 32px -16px oklch(0.36 0.04 212 / 0.22);
+}
+
+/* ---------------------------------------------------------------------------
+ * HERO VEIL — the scrim over the industrial photo. Homepage hero only
+ * (`.hero-veil` is used in exactly one place: Hero.tsx).
+ *
+ * HUE (why this is blue and not teal): the previous veil sat at hue 202-225
+ * with chroma 0.045-0.06. That is a desaturated teal, and against the navbar's
+ * blue it read as a green/grey cast rather than as part of the palette. The
+ * body gradient now runs hue 237-245 at chroma 0.061-0.079 — a true cool
+ * industrial blue. Do not drift these stops back below ~235 or the grey-green
+ * returns.
+ *
+ * SEAM WITH THE NAVBAR: the top stop is L 0.314, which is the navbar's own
+ * bottom edge (L 0.315) to within a rounding error, so the bar hands off into
+ * the hero with no step in tone — only the alpha differs. Keep that pairing if
+ * you retune either surface.
+ *
+ * OPACITY vs CONTRAST — the trade this file has to hold: the body gradient is
+ * deliberately thin (0.45 -> 0.55, down from 0.5 -> 0.64) so the photograph
+ * stays visible. Thinning it that far lets bright patches of the photo through,
+ * which costs contrast on the cyan headline span (large text, needs 3:1) more
+ * than on the white copy. The fix is the FIRST layer: a scrim weighted to the
+ * left, where the headline and body column sit, fading out by ~70% across. It
+ * buys back the contrast locally instead of darkening the whole frame, which is
+ * what keeps the right-hand side of the image open. If you thin the body
+ * gradient further, deepen the scrim to match — do not drop it.
+ * ------------------------------------------------------------------------- */
+.hero-veil {
+  background-image:
+    linear-gradient(
+      95deg,
+      oklch(0.26 0.055 245 / 0.38) 0%,
+      oklch(0.26 0.055 245 / 0.18) 44%,
+      oklch(0.26 0.055 245 / 0) 70%
+    ),
+    linear-gradient(
+      180deg,
+      oklch(0.314 0.061 245 / 0.45) 0%,
+      oklch(0.3954 0.0717 240 / 0.5) 52%,
+      oklch(0.4386 0.0786 237 / 0.55) 100%
+    );
 }
