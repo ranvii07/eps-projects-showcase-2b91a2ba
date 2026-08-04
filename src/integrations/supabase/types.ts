@@ -305,6 +305,59 @@ export type Database = {
         }
         Relationships: []
       }
+      project_images: {
+        Row: {
+          caption: string | null
+          category: string | null
+          created_at: string
+          id: string
+          image_url: string
+          is_cover: boolean
+          location: string | null
+          project_id: string
+          published: boolean
+          sort_order: number
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          caption?: string | null
+          category?: string | null
+          created_at?: string
+          id?: string
+          image_url: string
+          is_cover?: boolean
+          location?: string | null
+          project_id: string
+          published?: boolean
+          sort_order?: number
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          caption?: string | null
+          category?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string
+          is_cover?: boolean
+          location?: string | null
+          project_id?: string
+          published?: boolean
+          sort_order?: number
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_images_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
           client: string | null
@@ -316,6 +369,8 @@ export type Database = {
           industry: string | null
           location: string | null
           name: string
+          preview_enabled: boolean
+          preview_token: string
           project_value: number | null
           published: boolean
           sort_order: number
@@ -332,6 +387,8 @@ export type Database = {
           industry?: string | null
           location?: string | null
           name: string
+          preview_enabled?: boolean
+          preview_token?: string
           project_value?: number | null
           published?: boolean
           sort_order?: number
@@ -348,6 +405,8 @@ export type Database = {
           industry?: string | null
           location?: string | null
           name?: string
+          preview_enabled?: boolean
+          preview_token?: string
           project_value?: number | null
           published?: boolean
           sort_order?: number
@@ -389,6 +448,36 @@ export type Database = {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          created_at: string
+          description: string | null
+          enabled: boolean
+          key: string
+          label: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          key: string
+          label: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          key?: string
+          label?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -415,6 +504,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_preview_gallery_images: {
+        Args: { p_token: string }
+        Returns: {
+          caption: string
+          category: string
+          id: string
+          image_url: string
+          is_cover: boolean
+          location: string
+          project_id: string
+          project_name: string
+          sort_order: number
+          visibility: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

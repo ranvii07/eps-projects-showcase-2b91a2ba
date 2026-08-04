@@ -82,7 +82,9 @@ const WhyChooseUs = () => {
                       />
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-foreground mb-3 text-center">{reason.title}</h3>
+                  <h3 className="text-xl font-bold text-foreground mb-3 text-center">
+                    {reason.title}
+                  </h3>
                   <p className="text-slate-300 text-center leading-relaxed">{reason.description}</p>
                 </CardContent>
               </Card>

@@ -20,11 +20,14 @@ import { Route as ClientsRouteImport } from './routes/clients'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProjectsGalleryRouteImport } from './routes/projects_.gallery'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
 import { Route as AuthenticatedAdminServicesRouteImport } from './routes/_authenticated/admin/services'
 import { Route as AuthenticatedAdminProjectsRouteImport } from './routes/_authenticated/admin/projects'
+import { Route as AuthenticatedAdminProjectGalleryRouteImport } from './routes/_authenticated/admin/project-gallery'
 import { Route as AuthenticatedAdminIndustriesRouteImport } from './routes/_authenticated/admin/industries'
 import { Route as AuthenticatedAdminHseRouteImport } from './routes/_authenticated/admin/hse'
 import { Route as AuthenticatedAdminFaqRouteImport } from './routes/_authenticated/admin/faq'
@@ -88,6 +91,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsGalleryRoute = ProjectsGalleryRouteImport.update({
+  id: '/projects_/gallery',
+  path: '/projects/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/admin/login',
   path: '/admin/login',
@@ -103,6 +111,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
+const AuthenticatedAdminSettingsRoute =
+  AuthenticatedAdminSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminServicesRoute =
   AuthenticatedAdminServicesRouteImport.update({
     id: '/services',
@@ -113,6 +127,12 @@ const AuthenticatedAdminProjectsRoute =
   AuthenticatedAdminProjectsRouteImport.update({
     id: '/projects',
     path: '/projects',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminProjectGalleryRoute =
+  AuthenticatedAdminProjectGalleryRouteImport.update({
+    id: '/project-gallery',
+    path: '/project-gallery',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminIndustriesRoute =
@@ -174,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/why-choose-us': typeof WhyChooseUsRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/projects/gallery': typeof ProjectsGalleryRoute
   '/admin/$': typeof AuthenticatedAdminSplatRoute
   '/admin/clients': typeof AuthenticatedAdminClientsRoute
   '/admin/contact-management': typeof AuthenticatedAdminContactManagementRoute
@@ -182,8 +203,10 @@ export interface FileRoutesByFullPath {
   '/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/admin/hse': typeof AuthenticatedAdminHseRoute
   '/admin/industries': typeof AuthenticatedAdminIndustriesRoute
+  '/admin/project-gallery': typeof AuthenticatedAdminProjectGalleryRoute
   '/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/admin/services': typeof AuthenticatedAdminServicesRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -198,6 +221,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/why-choose-us': typeof WhyChooseUsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/projects/gallery': typeof ProjectsGalleryRoute
   '/admin/$': typeof AuthenticatedAdminSplatRoute
   '/admin/clients': typeof AuthenticatedAdminClientsRoute
   '/admin/contact-management': typeof AuthenticatedAdminContactManagementRoute
@@ -206,8 +230,10 @@ export interface FileRoutesByTo {
   '/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/admin/hse': typeof AuthenticatedAdminHseRoute
   '/admin/industries': typeof AuthenticatedAdminIndustriesRoute
+  '/admin/project-gallery': typeof AuthenticatedAdminProjectGalleryRoute
   '/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/admin/services': typeof AuthenticatedAdminServicesRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
@@ -225,6 +251,7 @@ export interface FileRoutesById {
   '/why-choose-us': typeof WhyChooseUsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/projects_/gallery': typeof ProjectsGalleryRoute
   '/_authenticated/admin/$': typeof AuthenticatedAdminSplatRoute
   '/_authenticated/admin/clients': typeof AuthenticatedAdminClientsRoute
   '/_authenticated/admin/contact-management': typeof AuthenticatedAdminContactManagementRoute
@@ -233,8 +260,10 @@ export interface FileRoutesById {
   '/_authenticated/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/_authenticated/admin/hse': typeof AuthenticatedAdminHseRoute
   '/_authenticated/admin/industries': typeof AuthenticatedAdminIndustriesRoute
+  '/_authenticated/admin/project-gallery': typeof AuthenticatedAdminProjectGalleryRoute
   '/_authenticated/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/_authenticated/admin/services': typeof AuthenticatedAdminServicesRoute
+  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -252,6 +281,7 @@ export interface FileRouteTypes {
     | '/why-choose-us'
     | '/admin'
     | '/admin/login'
+    | '/projects/gallery'
     | '/admin/$'
     | '/admin/clients'
     | '/admin/contact-management'
@@ -260,8 +290,10 @@ export interface FileRouteTypes {
     | '/admin/faq'
     | '/admin/hse'
     | '/admin/industries'
+    | '/admin/project-gallery'
     | '/admin/projects'
     | '/admin/services'
+    | '/admin/settings'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -276,6 +308,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/why-choose-us'
     | '/admin/login'
+    | '/projects/gallery'
     | '/admin/$'
     | '/admin/clients'
     | '/admin/contact-management'
@@ -284,8 +317,10 @@ export interface FileRouteTypes {
     | '/admin/faq'
     | '/admin/hse'
     | '/admin/industries'
+    | '/admin/project-gallery'
     | '/admin/projects'
     | '/admin/services'
+    | '/admin/settings'
     | '/admin'
   id:
     | '__root__'
@@ -302,6 +337,7 @@ export interface FileRouteTypes {
     | '/why-choose-us'
     | '/_authenticated/admin'
     | '/admin/login'
+    | '/projects_/gallery'
     | '/_authenticated/admin/$'
     | '/_authenticated/admin/clients'
     | '/_authenticated/admin/contact-management'
@@ -310,8 +346,10 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/faq'
     | '/_authenticated/admin/hse'
     | '/_authenticated/admin/industries'
+    | '/_authenticated/admin/project-gallery'
     | '/_authenticated/admin/projects'
     | '/_authenticated/admin/services'
+    | '/_authenticated/admin/settings'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -328,6 +366,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   WhyChooseUsRoute: typeof WhyChooseUsRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  ProjectsGalleryRoute: typeof ProjectsGalleryRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -409,6 +448,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects_/gallery': {
+      id: '/projects_/gallery'
+      path: '/projects/gallery'
+      fullPath: '/projects/gallery'
+      preLoaderRoute: typeof ProjectsGalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/admin/login'
@@ -430,6 +476,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/settings': {
+      id: '/_authenticated/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/services': {
       id: '/_authenticated/admin/services'
       path: '/services'
@@ -442,6 +495,13 @@ declare module '@tanstack/react-router' {
       path: '/projects'
       fullPath: '/admin/projects'
       preLoaderRoute: typeof AuthenticatedAdminProjectsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/project-gallery': {
+      id: '/_authenticated/admin/project-gallery'
+      path: '/project-gallery'
+      fullPath: '/admin/project-gallery'
+      preLoaderRoute: typeof AuthenticatedAdminProjectGalleryRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/industries': {
@@ -512,8 +572,10 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminFaqRoute: typeof AuthenticatedAdminFaqRoute
   AuthenticatedAdminHseRoute: typeof AuthenticatedAdminHseRoute
   AuthenticatedAdminIndustriesRoute: typeof AuthenticatedAdminIndustriesRoute
+  AuthenticatedAdminProjectGalleryRoute: typeof AuthenticatedAdminProjectGalleryRoute
   AuthenticatedAdminProjectsRoute: typeof AuthenticatedAdminProjectsRoute
   AuthenticatedAdminServicesRoute: typeof AuthenticatedAdminServicesRoute
+  AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -528,8 +590,11 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminFaqRoute: AuthenticatedAdminFaqRoute,
     AuthenticatedAdminHseRoute: AuthenticatedAdminHseRoute,
     AuthenticatedAdminIndustriesRoute: AuthenticatedAdminIndustriesRoute,
+    AuthenticatedAdminProjectGalleryRoute:
+      AuthenticatedAdminProjectGalleryRoute,
     AuthenticatedAdminProjectsRoute: AuthenticatedAdminProjectsRoute,
     AuthenticatedAdminServicesRoute: AuthenticatedAdminServicesRoute,
+    AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   }
 
@@ -562,6 +627,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   WhyChooseUsRoute: WhyChooseUsRoute,
   AdminLoginRoute: AdminLoginRoute,
+  ProjectsGalleryRoute: ProjectsGalleryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

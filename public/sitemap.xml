@@ -30,6 +30,12 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- /projects/gallery is deliberately absent: the page is gated behind the
+       `project_gallery_enabled` site setting and returns 404 while that is off,
+       so listing it would advertise a URL that 404s. Re-add this entry when the
+       toggle is switched on for good:
+         <url><loc>https://www.epsprojects.in/projects/gallery</loc>
+              <changefreq>monthly</changefreq><priority>0.6</priority></url> -->
   <url>
     <loc>https://www.epsprojects.in/clients</loc>
     <changefreq>monthly</changefreq>

@@ -179,7 +179,9 @@ const About = () => {
                   {hseContent.map((item) => (
                     <div key={item.id}>
                       {item.title && (
-                        <h4 className="text-foreground font-semibold mb-2 text-center">{item.title}</h4>
+                        <h4 className="text-foreground font-semibold mb-2 text-center">
+                          {item.title}
+                        </h4>
                       )}
                       <p className="text-slate-300 text-center leading-relaxed">{item.body}</p>
                     </div>

@@ -132,7 +132,9 @@ function IndustriesPage() {
                           size={32}
                         />
                       </div>
-                      <CardTitle className="text-xl font-bold text-foreground">{industry.name}</CardTitle>
+                      <CardTitle className="text-xl font-bold text-foreground">
+                        {industry.name}
+                      </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <p className="text-slate-300 mb-4 leading-relaxed">{industry.description}</p>
@@ -144,7 +146,9 @@ function IndustriesPage() {
           )}
 
           <div className="mt-20 text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Sectors We Serve</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              Sectors We Serve
+            </h2>
             <div className="w-24 h-1 bg-cyan-400 mx-auto mb-6"></div>
             <div className="flex flex-wrap justify-center gap-3">
               {SECTORS.map((sector) => (
