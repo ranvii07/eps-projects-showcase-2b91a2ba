@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { buildPageHead } from "@/lib/site";
 import Contact from "@/components/site/Contact";
-import FAQ from "@/components/site/FAQ";
 
 export const Route = createFileRoute("/contact")({
   head: () =>
@@ -15,7 +14,6 @@ export const Route = createFileRoute("/contact")({
     <div data-testid="contact-page" className="pt-20">
       <h1 className="sr-only">Contact EPS Projects</h1>
       <Contact />
-      <FAQ />
     </div>
   ),
 });

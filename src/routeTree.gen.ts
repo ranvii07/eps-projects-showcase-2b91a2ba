@@ -30,7 +30,6 @@ import { Route as AuthenticatedAdminProjectsRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminProjectGalleryRouteImport } from './routes/_authenticated/admin/project-gallery'
 import { Route as AuthenticatedAdminIndustriesRouteImport } from './routes/_authenticated/admin/industries'
 import { Route as AuthenticatedAdminHseRouteImport } from './routes/_authenticated/admin/hse'
-import { Route as AuthenticatedAdminFaqRouteImport } from './routes/_authenticated/admin/faq'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin/dashboard'
 import { Route as AuthenticatedAdminCredentialsRouteImport } from './routes/_authenticated/admin/credentials'
 import { Route as AuthenticatedAdminContactManagementRouteImport } from './routes/_authenticated/admin/contact-management'
@@ -146,11 +145,6 @@ const AuthenticatedAdminHseRoute = AuthenticatedAdminHseRouteImport.update({
   path: '/hse',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
-const AuthenticatedAdminFaqRoute = AuthenticatedAdminFaqRouteImport.update({
-  id: '/faq',
-  path: '/faq',
-  getParentRoute: () => AuthenticatedAdminRouteRoute,
-} as any)
 const AuthenticatedAdminDashboardRoute =
   AuthenticatedAdminDashboardRouteImport.update({
     id: '/dashboard',
@@ -200,7 +194,6 @@ export interface FileRoutesByFullPath {
   '/admin/contact-management': typeof AuthenticatedAdminContactManagementRoute
   '/admin/credentials': typeof AuthenticatedAdminCredentialsRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
-  '/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/admin/hse': typeof AuthenticatedAdminHseRoute
   '/admin/industries': typeof AuthenticatedAdminIndustriesRoute
   '/admin/project-gallery': typeof AuthenticatedAdminProjectGalleryRoute
@@ -227,7 +220,6 @@ export interface FileRoutesByTo {
   '/admin/contact-management': typeof AuthenticatedAdminContactManagementRoute
   '/admin/credentials': typeof AuthenticatedAdminCredentialsRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
-  '/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/admin/hse': typeof AuthenticatedAdminHseRoute
   '/admin/industries': typeof AuthenticatedAdminIndustriesRoute
   '/admin/project-gallery': typeof AuthenticatedAdminProjectGalleryRoute
@@ -257,7 +249,6 @@ export interface FileRoutesById {
   '/_authenticated/admin/contact-management': typeof AuthenticatedAdminContactManagementRoute
   '/_authenticated/admin/credentials': typeof AuthenticatedAdminCredentialsRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
-  '/_authenticated/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/_authenticated/admin/hse': typeof AuthenticatedAdminHseRoute
   '/_authenticated/admin/industries': typeof AuthenticatedAdminIndustriesRoute
   '/_authenticated/admin/project-gallery': typeof AuthenticatedAdminProjectGalleryRoute
@@ -287,7 +278,6 @@ export interface FileRouteTypes {
     | '/admin/contact-management'
     | '/admin/credentials'
     | '/admin/dashboard'
-    | '/admin/faq'
     | '/admin/hse'
     | '/admin/industries'
     | '/admin/project-gallery'
@@ -314,7 +304,6 @@ export interface FileRouteTypes {
     | '/admin/contact-management'
     | '/admin/credentials'
     | '/admin/dashboard'
-    | '/admin/faq'
     | '/admin/hse'
     | '/admin/industries'
     | '/admin/project-gallery'
@@ -343,7 +332,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/contact-management'
     | '/_authenticated/admin/credentials'
     | '/_authenticated/admin/dashboard'
-    | '/_authenticated/admin/faq'
     | '/_authenticated/admin/hse'
     | '/_authenticated/admin/industries'
     | '/_authenticated/admin/project-gallery'
@@ -518,13 +506,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminHseRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/_authenticated/admin/faq': {
-      id: '/_authenticated/admin/faq'
-      path: '/faq'
-      fullPath: '/admin/faq'
-      preLoaderRoute: typeof AuthenticatedAdminFaqRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
     '/_authenticated/admin/dashboard': {
       id: '/_authenticated/admin/dashboard'
       path: '/dashboard'
@@ -569,7 +550,6 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminContactManagementRoute: typeof AuthenticatedAdminContactManagementRoute
   AuthenticatedAdminCredentialsRoute: typeof AuthenticatedAdminCredentialsRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
-  AuthenticatedAdminFaqRoute: typeof AuthenticatedAdminFaqRoute
   AuthenticatedAdminHseRoute: typeof AuthenticatedAdminHseRoute
   AuthenticatedAdminIndustriesRoute: typeof AuthenticatedAdminIndustriesRoute
   AuthenticatedAdminProjectGalleryRoute: typeof AuthenticatedAdminProjectGalleryRoute
@@ -587,7 +567,6 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
       AuthenticatedAdminContactManagementRoute,
     AuthenticatedAdminCredentialsRoute: AuthenticatedAdminCredentialsRoute,
     AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
-    AuthenticatedAdminFaqRoute: AuthenticatedAdminFaqRoute,
     AuthenticatedAdminHseRoute: AuthenticatedAdminHseRoute,
     AuthenticatedAdminIndustriesRoute: AuthenticatedAdminIndustriesRoute,
     AuthenticatedAdminProjectGalleryRoute:
@@ -632,3 +611,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
