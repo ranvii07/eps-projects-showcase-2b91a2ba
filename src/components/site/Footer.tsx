@@ -123,23 +123,23 @@ const Footer = () => {
                 <Phone className="text-cyan-400 flex-shrink-0 mt-1" size={18} />
                 <div className="text-slate-400 text-sm space-y-2">
                   <div>
-                    <span className="block text-slate-300">Digvijay Tanwar, Director</span>
-                    <a
-                      href="tel:+919810731116"
-                      className="hover:text-cyan-400 transition-colors block"
-                    >
-                      +91 98107 31116
-                    </a>
-                  </div>
-                  <div>
-                    <span className="block text-slate-300">
-                      Surender Chahal, Chief Operating Officer
-                    </span>
+                    <span className="block text-slate-300">Surender Chahal, Chief Operating Officer</span>
                     <a
                       href="tel:+919071970000"
                       className="hover:text-cyan-400 transition-colors block"
                     >
                       +91 90719 70000
+                    </a>
+                  </div>
+                  <div>
+                    <span className="block text-slate-300">
+                      Digvijay Tanwar, Director
+                    </span>
+                    <a
+                      href="tel:+919810731116"
+                      className="hover:text-cyan-400 transition-colors block"
+                    >
+                      +91 98107 31116&nbsp;
                     </a>
                   </div>
                 </div>
