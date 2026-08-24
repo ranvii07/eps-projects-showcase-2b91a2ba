@@ -46,15 +46,6 @@ const resolveIcon = (name: string | null): LucideIcon => {
   return iconMap[name.trim().toLowerCase()] ?? Factory;
 };
 
-const SECTORS = [
-  "Sugar & Distillery",
-  "Cement & Steel",
-  "Mining",
-  "Petrochemical",
-  "Infrastructure",
-  "Clean Energy",
-];
-
 export const Route = createFileRoute("/industries")({
   head: () =>
     buildPageHead({
@@ -144,23 +135,6 @@ function IndustriesPage() {
               })}
             </div>
           )}
-
-          <div className="mt-20 text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-              Sectors We Serve
-            </h2>
-            <div className="w-24 h-1 bg-cyan-400 mx-auto mb-6"></div>
-            <div className="flex flex-wrap justify-center gap-3">
-              {SECTORS.map((sector) => (
-                <span
-                  key={sector}
-                  className="rounded-full border border-zinc-700 bg-zinc-900 px-5 py-2 text-slate-300 hover:border-cyan-400 hover:text-cyan-400 transition-colors"
-                >
-                  {sector}
-                </span>
-              ))}
-            </div>
-          </div>
         </div>
       </section>
     </div>

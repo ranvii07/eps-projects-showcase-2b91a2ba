@@ -8,13 +8,7 @@ import { statusLabel, statusStyle } from "@/lib/contact-status";
 
 // Content tables that expose a `published` boolean (verified vs types.ts). Each
 // card shows published/total and links to its manager.
-type ContentTable =
-  | "projects"
-  | "clients"
-  | "services"
-  | "faq"
-  | "hse_content"
-  | "company_credentials";
+type ContentTable = "projects" | "clients" | "services" | "hse_content" | "company_credentials";
 
 const contentSections: {
   table: ContentTable;
@@ -39,12 +33,6 @@ const contentSections: {
     title: "Services",
     description: "Manage service offerings.",
     url: "/admin/services",
-  },
-  {
-    table: "faq",
-    title: "FAQs",
-    description: "Manage frequently asked questions.",
-    url: "/admin/faq",
   },
   {
     table: "hse_content",

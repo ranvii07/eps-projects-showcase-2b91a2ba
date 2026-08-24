@@ -46,10 +46,10 @@ const resolveIcon = (name: string | null): LucideIcon => {
 };
 
 const industries = [
+  { name: "Co-generation & Power", image: "/images/industries/cogen.webp" },
+  { name: "Sugar & Distillery", image: "/images/industries/sugar.webp" },
   { name: "Mining & Minerals", image: "/images/industries/mining.webp" },
   { name: "Cement Industry", image: "/images/industries/cement.webp" },
-  { name: "Sugar & Distillery", image: "/images/industries/sugar.webp" },
-  { name: "Co-generation & Power", image: "/images/industries/cogen.webp" },
 ];
 
 // §7.5-B — hardcoded Material Supply portfolio (three blocks). Shown on /services only.
@@ -152,6 +152,34 @@ const Services = ({ variant = "home" }: { variant?: "home" | "detail" }) => {
   return (
     <section id="services" className="py-20 bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {!detail && (
+          <div className="mb-20">
+            <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-8 text-center">
+              Industries We Serve
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {industries.map((industry) => (
+                <div
+                  key={industry.name}
+                  className="relative group overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
+                >
+                  <div className="aspect-square">
+                    <img
+                      src={industry.image}
+                      alt={industry.name}
+                      loading="lazy"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 to-transparent flex items-end">
+                      <p className="text-white font-bold text-lg p-4">{industry.name}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Comprehensive Electrical &amp; Instrumentation Solutions
@@ -236,7 +264,7 @@ const Services = ({ variant = "home" }: { variant?: "home" | "detail" }) => {
           </div>
         )}
 
-        {detail ? (
+        {detail && (
           <div className="mt-20 text-center">
             <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
               Industries We Serve
@@ -260,32 +288,6 @@ const Services = ({ variant = "home" }: { variant?: "home" | "detail" }) => {
               View all industries
               <ArrowRight size={18} />
             </Link>
-          </div>
-        ) : (
-          <div className="mt-20">
-            <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-8 text-center">
-              Industries We Serve
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {industries.map((industry) => (
-                <div
-                  key={industry.name}
-                  className="relative group overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
-                >
-                  <div className="aspect-square">
-                    <img
-                      src={industry.image}
-                      alt={industry.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 to-transparent flex items-end">
-                      <p className="text-white font-bold text-lg p-4">{industry.name}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         )}
       </div>
