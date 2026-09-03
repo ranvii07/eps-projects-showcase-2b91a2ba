@@ -55,6 +55,17 @@ const ContactInfo = () => {
                     +91 98107 31116
                   </a>
                 </div>
+                <div>
+                  <p className="font-medium text-foreground">
+                    Purnima Bhandari, Technical Project
+                  </p>
+                  <a
+                    href="tel:+917678531008"
+                    className="hover:text-green-400 transition-colors block"
+                  >
+                    +91 76785 31008
+                  </a>
+                </div>
               </div>
             </div>
           </div>

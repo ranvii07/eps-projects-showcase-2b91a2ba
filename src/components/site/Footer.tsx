@@ -142,6 +142,17 @@ const Footer = () => {
                       +91 98107 31116&nbsp;
                     </a>
                   </div>
+                  <div>
+                    <span className="block text-slate-300">
+                      Purnima Bhandari, Technical Project
+                    </span>
+                    <a
+                      href="tel:+917678531008"
+                      className="hover:text-cyan-400 transition-colors block"
+                    >
+                      +91 76785 31008
+                    </a>
+                  </div>
                 </div>
               </li>
               <li className="flex items-start space-x-3">
