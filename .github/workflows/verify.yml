@@ -1,0 +1,22 @@
+name: Verify
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      # --check (not --write): CI must FAIL on unformatted files, not silently
+      # rewrite them in a throwaway checkout.
+      - run: bun run format:check
+      - run: bun run lint
+      # vite build does not typecheck; without this, type errors ship.
+      - run: bun run typecheck
+      - run: bun run build

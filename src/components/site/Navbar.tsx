@@ -64,8 +64,14 @@ const Navbar = () => {
       data-testid="navbar"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          <Link to="/" className="flex items-center" data-testid="navbar-logo">
+        {/* Three regions: logo left, links in the middle, and the CTA + menu
+            button clustered right. The two outer regions are both `flex-1`, so
+            they always claim an equal share of the free space and the links land
+            on the bar's true centre — centring the links inside the leftover
+            space instead would pull them left, since the right cluster is wider
+            than the logo. Responsive by construction, no fixed offsets. */}
+        <div className="flex items-center gap-4 h-20">
+          <Link to="/" className="flex flex-1 items-center" data-testid="navbar-logo">
             <img src="/eps-logo.png" alt="EPS Projects Logo" className="h-12 w-auto" />
           </Link>
 
@@ -115,16 +121,24 @@ const Navbar = () => {
                 </Link>
               ),
             )}
-            <Button
-              onClick={() => navigate({ to: "/contact" })}
-              data-testid="nav-contact-btn"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
-            >
-              Contact Us
-            </Button>
           </div>
 
-          <div className="lg:hidden">
+          {/* Right cluster: the CTA and the menu button travel together and stay
+              anchored to the right edge. It mirrors the logo's `flex-1`, which is
+              what keeps the links centred on the bar. The menu button shows at
+              every width; the CTA is desktop-only, since the drawer carries its
+              own. */}
+          <div className="flex flex-1 items-center justify-end gap-4">
+            <div className="hidden lg:flex items-center">
+              <Button
+                onClick={() => navigate({ to: "/contact" })}
+                data-testid="nav-contact-btn"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
+              >
+                Contact Us
+              </Button>
+            </div>
+
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="text-slate-200 hover:text-cyan-400 transition-colors"
@@ -142,10 +156,13 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div
           id="mobile-menu"
-          className="lg:hidden nav-surface-solid border-t border-slate-700 shadow-lg"
+          className="nav-surface-solid border-t border-slate-700 shadow-lg"
           data-testid="mobile-menu"
         >
-          <div className="px-4 py-4 space-y-3">
+          {/* Same container as the bar above, so the drawer's items line up with
+              the logo and links instead of hugging the viewport's left edge on
+              wide screens. */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-3">
             {navLinks.map((link) =>
               // No popup on mobile: the sub-pages are listed inline under a
               // non-interactive "Projects" heading, which is how a drawer menu
