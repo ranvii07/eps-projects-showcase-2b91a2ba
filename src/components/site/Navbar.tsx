@@ -22,7 +22,6 @@ const navLinks = [
   { name: "About", to: "/about" },
   { name: "Services", to: "/services" },
   { name: "Industries", to: "/industries" },
-  { name: "Why Choose Us", to: "/why-choose-us" },
   { name: "Projects", to: "/projects" },
   { name: "Clients", to: "/clients" },
 ] as const;

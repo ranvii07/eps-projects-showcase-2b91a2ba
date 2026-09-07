@@ -5,7 +5,6 @@ import { buildPageHead } from "@/lib/site";
 import Hero from "@/components/site/Hero";
 import CompanyStats from "@/components/site/CompanyStats";
 import Services from "@/components/site/Services";
-import WhyChooseUs from "@/components/site/WhyChooseUs";
 import FeaturedProjects from "@/components/site/FeaturedProjects";
 import ClientsShowcase from "@/components/site/ClientsShowcase";
 import Contact from "@/components/site/Contact";
@@ -28,7 +27,6 @@ function HomePage() {
       <Hero />
       <CompanyStats />
       <Services />
-      <WhyChooseUs />
       <FeaturedProjects />
       <ClientsShowcase />
 
