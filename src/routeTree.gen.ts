@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WhyChooseUsRouteImport } from './routes/why-choose-us'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ProjectsRouteImport } from './routes/projects'
@@ -36,11 +35,6 @@ import { Route as AuthenticatedAdminContactManagementRouteImport } from './route
 import { Route as AuthenticatedAdminClientsRouteImport } from './routes/_authenticated/admin/clients'
 import { Route as AuthenticatedAdminSplatRouteImport } from './routes/_authenticated/admin/$'
 
-const WhyChooseUsRoute = WhyChooseUsRouteImport.update({
-  id: '/why-choose-us',
-  path: '/why-choose-us',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -185,7 +179,6 @@ export interface FileRoutesByFullPath {
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
   '/terms': typeof TermsRoute
-  '/why-choose-us': typeof WhyChooseUsRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/projects/gallery': typeof ProjectsGalleryRoute
@@ -212,7 +205,6 @@ export interface FileRoutesByTo {
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
   '/terms': typeof TermsRoute
-  '/why-choose-us': typeof WhyChooseUsRoute
   '/admin/login': typeof AdminLoginRoute
   '/projects/gallery': typeof ProjectsGalleryRoute
   '/admin/$': typeof AuthenticatedAdminSplatRoute
@@ -240,7 +232,6 @@ export interface FileRoutesById {
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
   '/terms': typeof TermsRoute
-  '/why-choose-us': typeof WhyChooseUsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/projects_/gallery': typeof ProjectsGalleryRoute
@@ -269,7 +260,6 @@ export interface FileRouteTypes {
     | '/projects'
     | '/services'
     | '/terms'
-    | '/why-choose-us'
     | '/admin'
     | '/admin/login'
     | '/projects/gallery'
@@ -296,7 +286,6 @@ export interface FileRouteTypes {
     | '/projects'
     | '/services'
     | '/terms'
-    | '/why-choose-us'
     | '/admin/login'
     | '/projects/gallery'
     | '/admin/$'
@@ -323,7 +312,6 @@ export interface FileRouteTypes {
     | '/projects'
     | '/services'
     | '/terms'
-    | '/why-choose-us'
     | '/_authenticated/admin'
     | '/admin/login'
     | '/projects_/gallery'
@@ -352,20 +340,12 @@ export interface RootRouteChildren {
   ProjectsRoute: typeof ProjectsRoute
   ServicesRoute: typeof ServicesRoute
   TermsRoute: typeof TermsRoute
-  WhyChooseUsRoute: typeof WhyChooseUsRoute
   AdminLoginRoute: typeof AdminLoginRoute
   ProjectsGalleryRoute: typeof ProjectsGalleryRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/why-choose-us': {
-      id: '/why-choose-us'
-      path: '/why-choose-us'
-      fullPath: '/why-choose-us'
-      preLoaderRoute: typeof WhyChooseUsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/terms': {
       id: '/terms'
       path: '/terms'
@@ -604,7 +584,6 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectsRoute: ProjectsRoute,
   ServicesRoute: ServicesRoute,
   TermsRoute: TermsRoute,
-  WhyChooseUsRoute: WhyChooseUsRoute,
   AdminLoginRoute: AdminLoginRoute,
   ProjectsGalleryRoute: ProjectsGalleryRoute,
 }
