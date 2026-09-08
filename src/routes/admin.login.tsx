@@ -21,8 +21,8 @@ export const Route = createFileRoute("/admin/login")({
     return { ...head, meta: [...head.meta, { name: "robots", content: "noindex,nofollow" }] };
   },
   beforeLoad: async () => {
-    // TEMPORARY: login is disabled — send everyone straight to the dashboard.
-    throw redirect({ to: "/admin/dashboard" });
+    const { data } = await supabase.auth.getUser();
+    if (data.user) throw redirect({ to: "/admin/dashboard" });
   },
   component: AdminLoginPage,
 });
