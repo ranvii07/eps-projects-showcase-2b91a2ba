@@ -98,17 +98,17 @@ see step 6). This host is used consistently by `src/lib/site.ts` (`SITE_URL`),
 All live, indexable public routes are present with sensible priorities. Admin
 routes (`/admin/*`) are deliberately excluded (private CMS; disallowed + noindex).
 
-| Path             | changefreq | priority |
-| ---------------- | ---------- | -------- |
-| `/`              | monthly    | 1.0      |
-| `/services`      | monthly    | 0.9      |
-| `/about`         | monthly    | 0.8      |
-| `/industries`    | monthly    | 0.8      |
-| `/contact`       | monthly    | 0.8      |
-| `/projects`      | monthly    | 0.7      |
-| `/clients`       | monthly    | 0.7      |
-| `/privacy`       | yearly     | 0.3      |
-| `/terms`         | yearly     | 0.3      |
+| Path          | changefreq | priority |
+| ------------- | ---------- | -------- |
+| `/`           | monthly    | 1.0      |
+| `/services`   | monthly    | 0.9      |
+| `/about`      | monthly    | 0.8      |
+| `/industries` | monthly    | 0.8      |
+| `/contact`    | monthly    | 0.8      |
+| `/projects`   | monthly    | 0.7      |
+| `/clients`    | monthly    | 0.7      |
+| `/privacy`    | yearly     | 0.3      |
+| `/terms`      | yearly     | 0.3      |
 
 **Keep in sync:** when a new public route is added (or one removed), update
 `public/sitemap.xml` and this table in the same change (the T2.4 cross-surface

@@ -36,7 +36,9 @@ const ContactInfo = () => {
               <h3 className="font-bold text-foreground mb-2">Phone Numbers</h3>
               <div className="text-slate-300 space-y-3">
                 <div>
-                  <p className="font-medium text-foreground">Surender Chahal, Chief Operating Officer</p>
+                  <p className="font-medium text-foreground">
+                    Surender Chahal, Chief Operating Officer
+                  </p>
                   <a
                     href="tel:+919071970000"
                     className="hover:text-green-400 transition-colors block"
@@ -45,9 +47,7 @@ const ContactInfo = () => {
                   </a>
                 </div>
                 <div>
-                  <p className="font-medium text-foreground">
-                    Digvijay Tanwar, Director
-                  </p>
+                  <p className="font-medium text-foreground">Digvijay Tanwar, Director</p>
                   <a
                     href="tel:+919810731116"
                     className="hover:text-green-400 transition-colors block"
@@ -56,9 +56,7 @@ const ContactInfo = () => {
                   </a>
                 </div>
                 <div>
-                  <p className="font-medium text-foreground">
-                    Purnima Bhandari, Technical Project
-                  </p>
+                  <p className="font-medium text-foreground">Purnima Bhandari, Technical Project</p>
                   <a
                     href="tel:+917678531008"
                     className="hover:text-green-400 transition-colors block"

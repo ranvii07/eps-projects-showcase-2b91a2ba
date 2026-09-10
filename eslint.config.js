@@ -6,7 +6,12 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", ".output", ".vinxi"] },
+  // src/integrations/supabase is Lovable/Supabase-generated integration code,
+  // regenerated whenever the backend or schema changes. Linting it only produces
+  // errors that cannot be fixed without editing files marked "do not edit
+  // directly" — and that would be undone on the next regeneration. Mirrors the
+  // same exclusion in .prettierignore.
+  { ignores: ["dist", ".output", ".vinxi", "src/integrations/supabase/**"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
