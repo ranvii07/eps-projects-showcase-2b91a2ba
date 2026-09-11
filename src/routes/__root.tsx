@@ -7,6 +7,7 @@ import {
   useRouterState,
   HeadContent,
   Scripts,
+  ClientOnly,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
@@ -220,7 +221,9 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ScrollToTop />
       {isAdminArea ? (
-        <Outlet />
+        <ClientOnly>
+          <Outlet />
+        </ClientOnly>
       ) : (
         <>
           <a
