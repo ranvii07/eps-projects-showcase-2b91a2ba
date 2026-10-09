@@ -9,10 +9,9 @@ import {
   Scripts,
   ClientOnly,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SITE_NAME, SITE_URL, SITE_LOGO } from "@/lib/site";
 import Navbar from "@/components/site/Navbar";
 import Footer from "@/components/site/Footer";
@@ -125,9 +124,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: unknown; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
 
   return (
     <div className="dark bg-zinc-950 min-h-screen flex items-center justify-center px-4">
