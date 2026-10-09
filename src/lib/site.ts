@@ -1,4 +1,4 @@
-export const SITE_URL = "https://www.epsprojects.in";
+export const SITE_URL = "https://www.epsprojects.com";
 export const SITE_NAME = "EPS Projects Pvt. Ltd.";
 export const SITE_LOGO = `${SITE_URL}/eps-logo.png`;
 

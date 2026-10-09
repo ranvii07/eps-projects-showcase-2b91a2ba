@@ -21,7 +21,7 @@ const sections = [
   },
   {
     heading: "Contact Us",
-    body: "For any questions regarding these Terms & Conditions, please contact us at info@epsprojects.in or call +91 98107-31116.",
+    body: "For any questions regarding these Terms & Conditions, please contact us at info@epsprojects.com or call +91 98107-31116.",
   },
 ];
 

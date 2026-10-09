@@ -80,16 +80,16 @@ const ContactInfo = () => {
               <h3 className="font-bold text-foreground mb-2">Email Addresses</h3>
               <div className="text-slate-300 space-y-1">
                 <a
-                  href="mailto:info@epsprojects.in"
+                  href="mailto:info@epsprojects.com"
                   className="hover:text-orange-400 transition-colors block"
                 >
-                  info@epsprojects.in
+                  info@epsprojects.com
                 </a>
                 <a
-                  href="mailto:surender@epsprojects.in"
+                  href="mailto:surender@epsprojects.com"
                   className="hover:text-orange-400 transition-colors block"
                 >
-                  surender@epsprojects.in
+                  surender@epsprojects.com
                 </a>
               </div>
             </div>

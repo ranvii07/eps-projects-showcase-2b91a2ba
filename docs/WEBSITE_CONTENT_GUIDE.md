@@ -299,7 +299,7 @@ everything under "Internal — do NOT publish" stays off public surfaces. Reuse 
 - Digvijay Tanwar, Director: +91 98107 31116 _(`tel:+919810731116`)_
 - Surender Chahal, Chief Operating Officer: +91 90719 70000 _(`tel:+919071970000`)_
 
-**Emails:** info@epsprojects.in · surender@epsprojects.in
+**Emails:** info@epsprojects.com · surender@epsprojects.com
 
 **Office (public):** Corporate Office — 212, 2nd Floor, Ansal Chamber-2, 6 Bhikaji Cama Place,
 New Delhi – 110 066.
@@ -308,7 +308,7 @@ New Delhi – 110 066.
 
 - Technical/operational personnel: Nitesh Singh, Purnima Bhandari, Nitin Singh (and their
   numbers) — internal operational contacts only.
-- Emails: dvt@epsprojects.in, nitesh@epsprojects.in.
+- Emails: dvt@epsprojects.com, nitesh@epsprojects.com.
 - The Ghaziabad (UP) office / Govind Puram address, and any office other than Delhi Corporate.
 - Bank / account details — **excluded unconditionally** (all surfaces).
 
@@ -342,7 +342,7 @@ work, it does not replace §7.9):
   details; the business-model revenue percentages; personal phone numbers not explicitly
   approved.
 - **Brand name:** "EPS Projects Pvt. Ltd." (formal) / "EPS Projects" (running text). Domain
-  family: epsprojects.in.
+  family: epsprojects.com.
   - **Legal-entity exception (confirmed 2026-07-09):** the full registered legal name
     **"EPS Projects Private Limited"** is intentionally retained in legal/registration
     contexts — the footer copyright line (© notice) and registration notices (GSTIN/CIN/PAN).
@@ -502,7 +502,7 @@ editable in the admin CMS.
    Projects executes Electrical & Instrumentation projects for clients across India." _(Delhi
    corporate office only, per the Public Contact Roster; the Ghaziabad office stays internal.)_
 6. **How can I request a quotation?** — "To request a quotation, contact EPS Projects at
-   info@epsprojects.in or +91 98107 31116, or use the enquiry form on the Contact page. Share your
+   info@epsprojects.com or +91 98107 31116, or use the enquiry form on the Contact page. Share your
    project scope and requirements, and the team will respond." _(info@ + Director number, within
    the approved public roster.)_
 

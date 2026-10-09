@@ -77,8 +77,24 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   });
 }
 
+// Canonical host is www.epsprojects.com. The primary apex → www 301 is a
+// Cloudflare Redirect Rule (it also covers static assets, which never reach
+// this worker); this is the fallback for worker-rendered pages if that rule is
+// ever missing, so SSR pages are never served on the bare apex.
+const APEX_HOST = "epsprojects.com";
+const CANONICAL_HOST = "www.epsprojects.com";
+
+function apexRedirect(request: Request): Response | null {
+  const url = new URL(request.url);
+  if (url.hostname !== APEX_HOST) return null;
+  url.hostname = CANONICAL_HOST;
+  return Response.redirect(url.toString(), 301);
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const redirect = apexRedirect(request);
+    if (redirect) return redirect;
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

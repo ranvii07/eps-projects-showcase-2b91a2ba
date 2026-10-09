@@ -1,10 +1,10 @@
 # Google Search Console — Setup & Verification (T4.4)
 
-Step-by-step guide for registering **epsprojects.in** with Google Search Console
+Step-by-step guide for registering **epsprojects.com** with Google Search Console
 (GSC), submitting the sitemap, and confirming indexing. The console steps are
 **performed by the site owner** — Claude cannot verify ownership or read GSC.
 
-Canonical host: **`https://www.epsprojects.in`** (non-`www` should redirect here —
+Canonical host: **`https://www.epsprojects.com`** (non-`www` should redirect here —
 see step 6). This host is used consistently by `src/lib/site.ts` (`SITE_URL`),
 `public/sitemap.xml`, and the `Sitemap:` line in `public/robots.txt`.
 
@@ -14,26 +14,26 @@ see step 6). This host is used consistently by `src/lib/site.ts` (`SITE_URL`),
 
 - Access to the Google account that should own the property (use a shared/company
   account, not a personal one, so ownership survives staff changes).
-- Access to **DNS records** for `epsprojects.in` (registrar or DNS host) — needed
+- Access to **DNS records** for `epsprojects.com` (registrar or DNS host) — needed
   for the recommended Domain-property verification.
-- The site deployed and reachable at `https://www.epsprojects.in`.
+- The site deployed and reachable at `https://www.epsprojects.com`.
 
 ## 1. Add the property
 
 1. Go to <https://search.google.com/search-console>.
 2. Click **Add property**.
-3. Choose **Domain** (recommended) and enter `epsprojects.in`.
+3. Choose **Domain** (recommended) and enter `epsprojects.com`.
    - A Domain property covers **all** subdomains and both `http`/`https` and
      `www`/non-`www` in one place — the cleanest option.
    - If DNS access is unavailable, fall back to a **URL-prefix** property for
-     `https://www.epsprojects.in` (verify via HTML tag or HTML file upload).
+     `https://www.epsprojects.com` (verify via HTML tag or HTML file upload).
 
 ## 2. Verify ownership
 
 **Domain property (DNS TXT):**
 
 1. GSC shows a `google-site-verification=…` **TXT record**.
-2. Add it as a TXT record at the apex (`@`) of `epsprojects.in` in your DNS host.
+2. Add it as a TXT record at the apex (`@`) of `epsprojects.com` in your DNS host.
 3. Wait for DNS propagation (minutes–hours), then click **Verify**.
 
 **URL-prefix fallback (if used):**
@@ -50,34 +50,34 @@ see step 6). This host is used consistently by `src/lib/site.ts` (`SITE_URL`),
 
 1. In GSC → **Sitemaps** (left nav).
 2. Under _Add a new sitemap_, enter **`sitemap.xml`** and **Submit**
-   (full URL: `https://www.epsprojects.in/sitemap.xml`).
+   (full URL: `https://www.epsprojects.com/sitemap.xml`).
 3. Status should read **Success**; _Discovered URLs_ should reach **10**
    (the count in `public/sitemap.xml` — see the list below).
 
 ## 4. Confirm the sitemap is reachable and correct
 
-- Open `https://www.epsprojects.in/sitemap.xml` in a browser — it should return the
+- Open `https://www.epsprojects.com/sitemap.xml` in a browser — it should return the
   XML (HTTP 200), not a 404 or the SPA shell.
-- Open `https://www.epsprojects.in/robots.txt` — confirm it shows:
+- Open `https://www.epsprojects.com/robots.txt` — confirm it shows:
 
   ```
   User-agent: *
   Allow: /
   Disallow: /admin
 
-  Sitemap: https://www.epsprojects.in/sitemap.xml
+  Sitemap: https://www.epsprojects.com/sitemap.xml
   ```
 
 ## 5. Request indexing (optional, speeds first crawl)
 
 - Use **URL Inspection** (top search bar) on the homepage
-  `https://www.epsprojects.in/` → **Request indexing**. Repeat for a few key pages
+  `https://www.epsprojects.com/` → **Request indexing**. Repeat for a few key pages
   (`/services`, `/industries`, `/contact`). Google crawls the rest from the sitemap.
 
 ## 6. Verify canonical host & redirects
 
-- Confirm **non-`www` → `www`** redirect: `https://epsprojects.in/` should 301 to
-  `https://www.epsprojects.in/`. If it does not, configure the redirect at the
+- Confirm **non-`www` → `www`** redirect: `https://epsprojects.com/` should 301 to
+  `https://www.epsprojects.com/`. If it does not, configure the redirect at the
   hosting/DNS layer so Google consolidates signals on the canonical host that the
   sitemap and `<link rel="canonical">` already use.
 - Confirm **`http` → `https`** redirect similarly.

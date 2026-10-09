@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.epsprojects.in/</loc>
+    <loc>https://www.epsprojects.com/</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.epsprojects.in/about</loc>
+    <loc>https://www.epsprojects.com/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.epsprojects.in/services</loc>
+    <loc>https://www.epsprojects.com/services</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.epsprojects.in/industries</loc>
+    <loc>https://www.epsprojects.com/industries</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.epsprojects.in/projects</loc>
+    <loc>https://www.epsprojects.com/projects</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -29,25 +29,25 @@
        `project_gallery_enabled` site setting and returns 404 while that is off,
        so listing it would advertise a URL that 404s. Re-add this entry when the
        toggle is switched on for good:
-         <url><loc>https://www.epsprojects.in/projects/gallery</loc>
+         <url><loc>https://www.epsprojects.com/projects/gallery</loc>
               <changefreq>monthly</changefreq><priority>0.6</priority></url> -->
   <url>
-    <loc>https://www.epsprojects.in/clients</loc>
+    <loc>https://www.epsprojects.com/clients</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.epsprojects.in/contact</loc>
+    <loc>https://www.epsprojects.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.epsprojects.in/privacy</loc>
+    <loc>https://www.epsprojects.com/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://www.epsprojects.in/terms</loc>
+    <loc>https://www.epsprojects.com/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

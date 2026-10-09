@@ -21,7 +21,7 @@ const sections = [
   },
   {
     heading: "Contact Us",
-    body: "If you have any questions about this Privacy Policy, please contact us at info@epsprojects.in or call +91 98107-31116.",
+    body: "If you have any questions about this Privacy Policy, please contact us at info@epsprojects.com or call +91 98107-31116.",
   },
 ];
 

@@ -1,0 +1,22 @@
+// Cloudflare Workers deploy config for www.epsprojects.com.
+// Nitro (cloudflare-module preset) merges this into the generated
+// .output/server/wrangler.json at build time — main/assets/rules come from Nitro.
+{
+  "name": "eps-projects-web",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // The site must only be reachable on the custom domains, where Cloudflare
+  // Access gates /admin*. A *.workers.dev or preview URL would bypass Access.
+  "workers_dev": false,
+  "preview_urls": false,
+
+  // Custom domains: Cloudflare creates the DNS records and certificates.
+  // The apex is attached only so it resolves; it 301s to www.
+  "routes": [
+    { "pattern": "www.epsprojects.com", "custom_domain": true },
+    { "pattern": "epsprojects.com", "custom_domain": true },
+  ],
+
+  "observability": { "enabled": true },
+}
