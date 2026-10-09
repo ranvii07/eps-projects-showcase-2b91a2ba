@@ -158,16 +158,16 @@ const Footer = () => {
                 <Mail className="text-cyan-400 flex-shrink-0 mt-1" size={18} />
                 <div className="text-slate-400 text-sm space-y-1">
                   <a
-                    href="mailto:info@epsprojects.com"
+                    href="mailto:info@epsprojects.in"
                     className="hover:text-cyan-400 transition-colors block"
                   >
-                    info@epsprojects.com
+                    info@epsprojects.in
                   </a>
                   <a
-                    href="mailto:surender@epsprojects.com"
+                    href="mailto:surender@epsprojects.in"
                     className="hover:text-cyan-400 transition-colors block"
                   >
-                    surender@epsprojects.com
+                    surender@epsprojects.in
                   </a>
                 </div>
               </li>

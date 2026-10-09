@@ -1,35 +1,16 @@
 import { useState } from "react";
-import { z } from "zod";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { contactSchema } from "@/lib/contact-schema";
 
 const INITIAL_FORM = { name: "", email: "", phone: "", company: "", subject: "", message: "" };
 
 type FormState = typeof INITIAL_FORM;
 type FieldId = keyof FormState;
-
-const contactSchema = z.object({
-  name: z.string().trim().min(1, "Please enter your name").max(100, "Name is too long"),
-  email: z
-    .string()
-    .trim()
-    .min(1, "Please enter your email")
-    .email("Enter a valid email")
-    .max(255, "Email is too long"),
-  phone: z.string().trim().max(30, "Phone number is too long"),
-  company: z.string().trim().max(150, "Company name is too long"),
-  subject: z.string().trim().max(200, "Subject is too long"),
-  message: z
-    .string()
-    .trim()
-    .min(10, "Message must be at least 10 characters")
-    .max(5000, "Message is too long"),
-});
 
 const FIELDS: Array<{
   id: Exclude<FieldId, "message">;
@@ -93,22 +74,22 @@ const ContactForm = () => {
       return;
     }
 
-    const { name, email, phone, company, subject, message } = parsed.data;
-
+    // The worker stores the enquiry and emails the business inbox (src/lib/contact-submit.ts).
     setIsSubmitting(true);
-    const { error } = await supabase.from("contact_submissions").insert({
-      name,
-      email,
-      phone: phone || null,
-      company: company || null,
-      subject: subject || null,
-      message,
-      source: "website",
-    });
+    let ok = false;
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(parsed.data),
+      });
+      ok = response.ok;
+    } catch {
+      ok = false;
+    }
     setIsSubmitting(false);
 
-    if (error) {
-      // Don't surface raw PostgREST/RLS error details to the public site.
+    if (!ok) {
       toast.error("Unable to send message", {
         description: "Something went wrong. Please try again, or email us directly.",
       });

@@ -7,7 +7,7 @@ export const Route = createFileRoute("/contact")({
     buildPageHead({
       title: "Contact",
       description:
-        "Get in touch with EPS Projects Pvt. Ltd. for Electrical & Instrumentation project enquiries. Call +91 98107-31116 or email info@epsprojects.com.",
+        "Get in touch with EPS Projects Pvt. Ltd. for Electrical & Instrumentation project enquiries. Call +91 98107-31116 or email info@epsprojects.in.",
       path: "/contact",
     }),
   component: () => (

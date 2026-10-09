@@ -18,5 +18,9 @@
     { "pattern": "epsprojects.com", "custom_domain": true },
   ],
 
+  // Contact-form notifications (src/lib/contact-submit.ts). Locked to one
+  // recipient, which must be a verified Email Routing destination address.
+  "send_email": [{ "name": "CONTACT_NOTIFY", "destination_address": "info@epsprojects.in" }],
+
   "observability": { "enabled": true },
 }
